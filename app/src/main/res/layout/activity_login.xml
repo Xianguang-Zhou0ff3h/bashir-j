@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    tools:context="com.example.bashir.flightapp.LoginActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/logo2" />
+
+            <EditText
+                android:id="@+id/passEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/userEditText"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="42dp"
+                android:backgroundTint="#ad343e"
+                android:backgroundTintMode="src_over"
+                android:ems="10"
+                android:hint="Enter Password"
+                android:inputType="textPassword"
+                android:shadowColor="@android:color/background_light"
+                android:textColor="@android:color/background_light"
+                android:textColorHighlight="@android:color/holo_red_dark"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColorLink="@android:color/background_light"
+                tools:layout_editor_absoluteX="49dp"
+                tools:layout_editor_absoluteY="268dp" />
+
+            <TextView
+                android:id="@+id/signUpTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/loginButton"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="47dp"
+                android:clickable="true"
+                android:onClick="signUpButton"
+                android:paddingLeft="20dp"
+                android:text="Not A User? Sign Up!"
+                android:textColor="#ad343e"
+                android:textSize="24sp"
+                tools:layout_editor_absoluteX="49dp"
+                tools:layout_editor_absoluteY="239dp" />
+
+            <EditText
+                android:id="@+id/userEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/imageView3"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="66dp"
+                android:backgroundTint="#ad343e"
+                android:backgroundTintMode="src_in"
+                android:drawableTint="#ad343e"
+                android:drawableTintMode="src_over"
+                android:ems="10"
+                android:foregroundTint="#ad343e"
+                android:foregroundTintMode="src_over"
+                android:hint="Enter Username"
+                android:inputType="textPersonName"
+                android:shadowColor="@android:color/background_light"
+                android:textColor="@android:color/background_light"
+                android:textColorHighlight="@android:color/holo_red_dark"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColorLink="@android:color/background_light"
+                tools:layout_editor_absoluteX="49dp"
+                tools:layout_editor_absoluteY="179dp" />
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/passEditText"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="45dp"
+                android:background="@drawable/custombutton"
+                android:onClick="loginButton"
+                android:text="Login" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

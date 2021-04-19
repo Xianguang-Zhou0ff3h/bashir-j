@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FlightApp</string>
+    <string name="ids">IDS</string>
+    <string name="selected">Selected</string>
+</resources>
