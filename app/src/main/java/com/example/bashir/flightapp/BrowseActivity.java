@@ -18,6 +18,7 @@ import android.widget.GridView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +38,9 @@ import java.util.Map;
 public class BrowseActivity extends AppCompatActivity {
 
     GridView gv;
+    ArrayList gA, cA;
+    ArrayList<HashMap<String, String>> allGenres;
+    ArrayList<HashMap<String, String>> allCategories;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +53,17 @@ public class BrowseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_browse);
         getSupportActionBar().hide();
 
-        //getActionBar().
 
+        allGenres = new ArrayList<HashMap<String, String>>();
+        allCategories = new ArrayList<HashMap<String, String>>();
+
+
+        //getActionBar()
+        gA = new ArrayList();
+        cA = new ArrayList();
+
+        getAllGenresPOST();
+        //getAllCategoriesPOST();
         sendPost();
     }
 
@@ -74,7 +88,9 @@ public class BrowseActivity extends AppCompatActivity {
     public void sendPost() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://192.168.1.115:3000/getContent";
+        String url = getString(R.string.ip) + "/getContent";
+        //String url = "https://httpbin.org/post";
+
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -98,9 +114,32 @@ public class BrowseActivity extends AppCompatActivity {
                 }
         ) {
             @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+
+                String genreArray =  gA.toArray().toString();
+                String catArray = gA.toArray().toString();
+                try {
+                    jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("category", catArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+
+            @Override
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
+                params.put("hey","hi");
                 //params.put("name", "Alif");
                 //params.put("domain", "http://itsalif.info");
 
@@ -110,6 +149,74 @@ public class BrowseActivity extends AppCompatActivity {
         queue.add(postRequest);
 
     }
+
+
+    public void getAllGenresPOST() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = getString(R.string.ip) + "/getContent";
+        //String url = "https://httpbin.org/post";
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            displayTitles(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        //Log.d("Error.Response", response);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+
+                String genreArray =  gA.toArray().toString();
+                String catArray = gA.toArray().toString();
+                try {
+                    jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("category", catArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("hey","hi");
+                //params.put("name", "Alif");
+                //params.put("domain", "http://itsalif.info");
+
+                return params;
+            }
+        };
+        queue.add(postRequest);
+
+    }
+
+
     void displayTitles(String response) throws JSONException {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -147,4 +254,6 @@ public class BrowseActivity extends AppCompatActivity {
         popup.show();
         decorView.setSystemUiVisibility(uiOptions);
     }
+
+
 }

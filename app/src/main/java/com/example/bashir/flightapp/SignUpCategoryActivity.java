@@ -15,16 +15,13 @@ import android.widget.Button;
  */
 
 public class SignUpCategoryActivity extends AppCompatActivity{
-    Button btn_next, btn_back, btn_tv,btn_music,btn_movies;
+    Button btn_next, btn_tv,btn_music,btn_movies;
     String Selected = "#872931";
     String UnSelected = "#ad343e";
     Boolean TVselected = false, Moviesselected = false , Musicselected = false;
     SharedPreferences shared ;
 
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-    }
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +30,7 @@ public class SignUpCategoryActivity extends AppCompatActivity{
 
         //192.168.1.115:300/findfilters/categories
         btn_next = (Button)findViewById(R.id.btn_next);
-        btn_back = (Button)findViewById(R.id.btn_back);
+
         btn_tv = (Button)findViewById(R.id.btn_tvshows);
         btn_movies = (Button)findViewById(R.id.btn_movies);
         btn_music = (Button)findViewById(R.id.btn_musicvideo);
@@ -45,11 +42,13 @@ public class SignUpCategoryActivity extends AppCompatActivity{
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     // change color
                     if (!Moviesselected) {
-                        btn_movies.setBackgroundColor(Color.parseColor(Selected));
+                        //btn_movies.setBackgroundColor(Color.parseColor(Selected));
+                        btn_movies.setPressed(true);
                         Moviesselected = true;
                     }
                     else {
-                        btn_movies.setBackgroundColor(Color.parseColor(UnSelected));
+                        //btn_movies.setBackgroundColor(Color.parseColor(UnSelected));
+                        btn_movies.setPressed(false);
                         Moviesselected = false;
                     }
                 }
@@ -62,11 +61,11 @@ public class SignUpCategoryActivity extends AppCompatActivity{
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     // change color
                     if (!Musicselected) {
-                        btn_music.setBackgroundColor(Color.parseColor(Selected));
+                        btn_music.setPressed(true);
                         Musicselected = true;
                     }
                     else {
-                        btn_music.setBackgroundColor(Color.parseColor(UnSelected));
+                        btn_music.setPressed(false);
                         Musicselected = false;
                     }
                 }
@@ -79,24 +78,18 @@ public class SignUpCategoryActivity extends AppCompatActivity{
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     // change color
                     if (!TVselected) {
-                        btn_tv.setBackgroundColor(Color.parseColor(Selected));
+                        btn_tv.setPressed(true);
                         TVselected = true;
                     }
                     else {
-                        btn_tv.setBackgroundColor(Color.parseColor(UnSelected));
+                        btn_tv.setPressed(false);
                         TVselected = false;
                     }
                 }
                 return true;
             }
         });
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-                startActivity(intent);
-            }
-        });
+
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,9 +121,9 @@ public class SignUpCategoryActivity extends AppCompatActivity{
         TVselected = shared.getBoolean("tv",false);
         Moviesselected = shared.getBoolean("movie",false);
         Musicselected = shared.getBoolean("music",false);
-        if (TVselected)  btn_tv.setBackgroundColor(Color.parseColor(Selected));
-        if (Moviesselected)  btn_movies.setBackgroundColor(Color.parseColor(Selected));
-        if (Musicselected)  btn_music.setBackgroundColor(Color.parseColor(Selected));
+        if (TVselected)  btn_tv.setPressed(true);
+        if (Moviesselected)  btn_movies.setPressed(true);
+        if (Musicselected)  btn_music.setPressed(true);
 
     }
 }

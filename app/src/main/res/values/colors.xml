@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="maroon">#ad343e</color>
+    <color name="grayBG">#e3e3e3</color>
+    <color name="blueBG">#373d4b</color>
+    <color name="orange">#D75737</color>
 </resources>

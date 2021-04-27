@@ -25,7 +25,7 @@ public class WatchActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         VideoView videoView = (VideoView) findViewById(R.id.videoView);
         try {
-            String link = "http://192.168.1.115:3000/streamvideo/" + id;
+            String link = getString(R.string.ip) + "/streamvideo/" + id;
             Uri vidUri = Uri.parse(link);
             videoView.setVideoURI(vidUri);
             MediaController mc = new MediaController(this);

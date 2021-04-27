@@ -31,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     EditText username;
     Button login;
-    TextView signUpTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.userEditText);
         password = (EditText) findViewById(R.id.passEditText);
         login = (Button) findViewById(R.id.loginButton);
-        signUpTV = (TextView) findViewById(R.id.signUpTextView);
 
-
-        signUpTV.setPaintFlags(signUpTV.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -79,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
     public void sendPost(final String user, final String pass) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://192.168.1.115:3000/getContent";
+        String url = getString(R.string.ip) + "/getContent";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {

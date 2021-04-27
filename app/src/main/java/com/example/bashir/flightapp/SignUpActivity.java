@@ -31,16 +31,13 @@ import java.util.Map;
 public class SignUpActivity extends AppCompatActivity {
     String WrongInputColor = "#ffb3b3";
     String url = "192.168.1.115:3000/";
-    Button btn_next, btn_cancel;
+    Button btn_next;
     EditText firstname,lastname,username,password,repassword;
     TableLayout table;
 
     SharedPreferences signinfo;
 
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,17 +51,10 @@ public class SignUpActivity extends AppCompatActivity {
         password = (EditText)findViewById(R.id.editText_Password);
         repassword = (EditText)findViewById(R.id.editText_RePassword);
         btn_next = (Button)findViewById(R.id.Btn_Next);
-        btn_cancel = (Button)findViewById(R.id.Btn_Cancel);
+
         table = (TableLayout)findViewById(R.id.table_layout);
         signinfo = PreferenceManager.getDefaultSharedPreferences(this);
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);//Get Back to login class (Page)
-                startActivity(intent);
 
-            }
-        });
 
         btn_next.setOnClickListener(new View.OnClickListener()  {
             @Override

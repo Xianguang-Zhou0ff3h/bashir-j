@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         TextView mTextView = (TextView) findViewById(R.id.text);
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://192.168.1.115:3000/getContent";
+        String url = getString(R.string.ip) + "/getContent";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {

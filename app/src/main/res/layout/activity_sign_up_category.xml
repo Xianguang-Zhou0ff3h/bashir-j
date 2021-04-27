@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_dark"
+    android:background="@color/blueBG"
     tools:context="com.example.bashir.flightapp.SignUpCategoryActivity">
 
     <ScrollView
@@ -17,6 +17,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp"
             android:orientation="vertical">
 
             <TableLayout
@@ -31,7 +34,9 @@
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Please choose the type of videos you would like to see"
+                        android:padding="30dp"
+                        android:text="Pick the categories you would be most interested in seeing!"
+                        android:textAlignment="center"
                         android:textColor="@android:color/background_light"
                         android:textSize="24sp" />
                 </TableRow>
@@ -44,9 +49,11 @@
                         android:id="@+id/btn_tvshows"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:background="@drawable/custombutton"
-                        android:text="TV shows" />
+                        android:layout_margin="15dp"
+                        android:background="@drawable/custombutton2"
+                        android:padding="30dp"
+                        android:text="TV shows"
+                        android:textColor="@android:color/background_light" />
                 </TableRow>
 
                 <TableRow
@@ -57,10 +64,12 @@
                         android:id="@+id/btn_movies"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="15dp"
                         android:layout_weight="1"
-                        android:background="@drawable/custombutton"
-                        android:text="Movies" />
+                        android:background="@drawable/custombutton2"
+                        android:padding="30dp"
+                        android:text="Movies"
+                        android:textColor="@android:color/background_light" />
                 </TableRow>
 
                 <TableRow
@@ -71,10 +80,12 @@
                         android:id="@+id/btn_musicvideo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_margin="15dp"
                         android:layout_weight="1"
-                        android:background="@drawable/custombutton"
-                        android:text="Music Videos" />
+                        android:background="@drawable/custombutton2"
+                        android:padding="30dp"
+                        android:text="Music Videos"
+                        android:textColor="@android:color/background_light" />
                 </TableRow>
 
                 <TableRow
@@ -82,22 +93,16 @@
                     android:layout_height="match_parent">
 
                     <Button
-                        android:id="@+id/btn_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/custombutton"
-                        android:text="Back" />
-
-                    <Button
                         android:id="@+id/btn_next"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="20dp"
                         android:layout_weight="1"
                         android:background="@drawable/custombutton"
-                        android:text="Next" />
+                        android:text="Next"
+                        android:textColor="@android:color/background_light" />
                 </TableRow>
             </TableLayout>
         </RelativeLayout>

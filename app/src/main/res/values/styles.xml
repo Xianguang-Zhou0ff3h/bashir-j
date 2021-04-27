@@ -5,19 +5,19 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#ad343e</item>
+        <item name="colorAccent">#D75737</item>
     </style>
 
     <style name="Theme.App.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorControlNormal">#ad343e</item>
-        <item name="colorControlActivated">#ad343e</item>
-        <item name="colorControlHighlight">#ad343e</item>
+        <item name="colorControlNormal">#D75737</item>
+        <item name="colorControlActivated">#D75737</item>
+        <item name="colorControlHighlight">#D75737</item>
     </style>
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
         <!-- Gets rid of the search icon -->
 
-        <item name="queryBackground">@color/maroon</item>
+        <item name="queryBackground">@color/orange</item>
 
     </style>
 
