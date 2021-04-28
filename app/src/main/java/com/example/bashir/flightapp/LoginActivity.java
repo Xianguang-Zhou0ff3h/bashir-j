@@ -1,8 +1,10 @@
 package com.example.bashir.flightapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,14 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     EditText username;
     Button login;
+    String UID;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        edit.putString("UID", UID);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+        UID = PreferenceManager.getDefaultSharedPreferences(this).getString("UID" , "");
     }
     public void loginButton(View v) {
         //sendPost(username.getText().toString(),password.getText().toString());

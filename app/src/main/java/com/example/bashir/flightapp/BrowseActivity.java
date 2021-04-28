@@ -1,6 +1,7 @@
 package com.example.bashir.flightapp;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -10,11 +11,15 @@ import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -38,7 +43,6 @@ import java.util.Map;
 public class BrowseActivity extends AppCompatActivity {
 
     GridView gv;
-    ArrayList gA, cA;
     ArrayList<HashMap<String, String>> allGenres;
     ArrayList<HashMap<String, String>> allCategories;
     @Override
@@ -59,12 +63,12 @@ public class BrowseActivity extends AppCompatActivity {
 
 
         //getActionBar()
-        gA = new ArrayList();
-        cA = new ArrayList();
+
+
 
         getAllGenresPOST();
-        //getAllCategoriesPOST();
-        sendPost();
+        getAllCategoriesPOST();
+
     }
 
     @Override
@@ -85,7 +89,7 @@ public class BrowseActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
     }
 
-    public void sendPost() {
+    public void getContentPOST(final ArrayList cA, final int containerID) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         String url = getString(R.string.ip) + "/getContent";
@@ -97,7 +101,7 @@ public class BrowseActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            displayTitles(response);
+                            displayTitles(response, containerID);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -124,10 +128,10 @@ public class BrowseActivity extends AppCompatActivity {
             public byte[] getBody() throws AuthFailureError {
                 JSONObject jsonBodyObj = new JSONObject();
 
-                String genreArray =  gA.toArray().toString();
-                String catArray = gA.toArray().toString();
+                //String genreArray =  gA.toArray().toString();
+                String catArray = cA.get(0).toString();
                 try {
-                    jsonBodyObj.put("genre", genreArray);
+                    //jsonBodyObj.put("genre", genreArray);
                     jsonBodyObj.put("category", catArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -154,16 +158,16 @@ public class BrowseActivity extends AppCompatActivity {
     public void getAllGenresPOST() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = getString(R.string.ip) + "/getContent";
+        String url = getString(R.string.ip) + "/findfilters/genres";
         //String url = "https://httpbin.org/post";
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>()
                 {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            displayTitles(response);
+                            parseGenres(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -179,33 +183,58 @@ public class BrowseActivity extends AppCompatActivity {
                     }
                 }
         ) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                return params;
-            }
 
-            @Override
-            public byte[] getBody() throws AuthFailureError {
-                JSONObject jsonBodyObj = new JSONObject();
-
-                String genreArray =  gA.toArray().toString();
-                String catArray = gA.toArray().toString();
-                try {
-                    jsonBodyObj.put("genre", genreArray);
-                    jsonBodyObj.put("category", catArray);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return jsonBodyObj.toString().getBytes();
-            }
 
             @Override
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("hey","hi");
+                //params.put("hey","hi");
+                //params.put("name", "Alif");
+                //params.put("domain", "http://itsalif.info");
+
+                return params;
+            }
+        };
+        queue.add(postRequest);
+
+    }
+
+    public void getAllCategoriesPOST() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = getString(R.string.ip) + "/findfilters/categories";
+        //String url = "https://httpbin.org/post";
+
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            parseCategories(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        //Log.d("Error.Response", response);
+                    }
+                }
+        ) {
+
+
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                //params.put("hey","hi");
                 //params.put("name", "Alif");
                 //params.put("domain", "http://itsalif.info");
 
@@ -217,11 +246,11 @@ public class BrowseActivity extends AppCompatActivity {
     }
 
 
-    void displayTitles(String response) throws JSONException {
+    void displayTitles(String response, int containerID) throws JSONException {
+        HorizontalScrollView sv = (HorizontalScrollView) findViewById(containerID);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        ArrayList<movieObject> arraylist = new ArrayList<movieObject>();
         JSONArray mainObject = new JSONArray(response);
         movieObject mO;
         String _id;
@@ -235,13 +264,65 @@ public class BrowseActivity extends AppCompatActivity {
             mO = new movieObject(_id,title,bio);
             //mO.getThumbnail();
             mO.width = size.x;
-            arraylist.add(i,mO);
-        }
-        gv = (GridView) findViewById(R.id.gridview);
-        GridAdapter gAdapter = new GridAdapter(this, arraylist);
 
-        gv.setAdapter(gAdapter);
+            LayoutInflater inflater =  (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.video_tile, null);
+            ((TextView) view.findViewById(R.id.titleTextView)).setText(mO.title);
+            mO.imgV = ((ImageView) view.findViewById(R.id.imageView));
+        }
+
     }
+
+    void parseGenres(String response) throws JSONException {
+
+        JSONArray mainObject = new JSONArray(response);
+        String _id;
+        String genre;
+        for(int i = 0; i<mainObject.length();i++){
+            HashMap<String, String> hashMap = new HashMap<>();
+            _id = (((JSONObject)mainObject.get(i)).getString("_id"));
+            genre = (((JSONObject)mainObject.get(i)).getString("genre"));
+            hashMap.put(_id,genre);
+
+            allGenres.add(hashMap);
+        }
+
+    }
+
+    void parseCategories(String response) throws JSONException {
+
+        JSONArray mainObject = new JSONArray(response);
+        String _id;
+        String category;
+        for(int i = 0; i<mainObject.length();i++){
+            HashMap<String, String> hashMap = new HashMap<>();
+            _id = (((JSONObject)mainObject.get(i)).getString("_id"));
+            category = (((JSONObject)mainObject.get(i)).getString("category"));
+            hashMap.put(_id,category);
+
+            allCategories.add(hashMap);
+        }
+        ArrayList cA1 = new ArrayList();
+        ArrayList cA2 = new ArrayList();
+        ArrayList cA3 = new ArrayList();
+        for (int i = 0; i < allCategories.size(); i++){
+            if(allCategories.get(i).containsValue("Music")){
+                cA1.add(allCategories.get(i).keySet().toArray()[0]);
+                getContentPOST(cA1, R.id.containerMusic);
+            }
+            if(allCategories.get(i).containsValue("Movie")){
+                cA2.add(allCategories.get(i).keySet().toArray()[0]);
+                getContentPOST(cA2, R.id.containerMovies);
+            }
+            if(allCategories.get(i).containsValue("TV Series")){
+                cA2.add(allCategories.get(i).keySet().toArray()[0]);
+                getContentPOST(cA2, R.id.containerTV);
+            }
+        }
+
+
+    }
+
 
     public void showPopup(View v) {
         View decorView = getWindow().getDecorView();

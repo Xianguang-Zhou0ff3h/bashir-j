@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:paddingBottom="20dp"
         android:paddingTop="20dp"
-        app:srcCompat="@drawable/th" />
+        app:srcCompat="@drawable/loader" />
 
     <TextView
         android:id="@+id/titleTextView"

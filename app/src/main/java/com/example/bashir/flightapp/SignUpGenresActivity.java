@@ -36,7 +36,7 @@ import java.util.Map;
  */
 
 public class SignUpGenresActivity extends AppCompatActivity {
-    String url = getString(R.string.ip) + "/applicableGenres";
+    String url;
     String Serverresponse = null;
     Button btn_done;
     TableLayout table ;
@@ -51,6 +51,7 @@ public class SignUpGenresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_genres);
         getSupportActionBar().hide();
+        url = getString(R.string.ip) + "/applicableGenres";
         TvSel = getIntent().getBooleanExtra("tvSelected", false);
         MovieSel = getIntent().getBooleanExtra("movieSelected", false);
         MusicSel = getIntent().getBooleanExtra("musicSelected", false);
