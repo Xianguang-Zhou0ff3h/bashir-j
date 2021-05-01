@@ -143,10 +143,7 @@ public class BrowseActivity extends AppCompatActivity {
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("hey","hi");
-                //params.put("name", "Alif");
-                //params.put("domain", "http://itsalif.info");
-
+                //params.put("param1","param2");
                 return params;
             }
         };
