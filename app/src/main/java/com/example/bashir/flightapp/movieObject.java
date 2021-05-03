@@ -1,6 +1,8 @@
 package com.example.bashir.flightapp;
 
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,7 +12,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,16 +42,19 @@ public class movieObject  {
     }
 
     public void getThumbnail(){
-        new DownloadImageTask(this.thumbnail , true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,"http://192.168.1.115:3000/thumbnail/" + this._id + "/150x150");
+        new DownloadImageTask(this.thumbnail , true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Resources.getSystem().getString(R.string.ip) + "/image/" + this._id );
         //new DownloadImageTask(this.thumbnail , true).execute("http://192.168.1.115:3000/thumbnail/" + this._id + "/150x150");
     }
 
     public void getBioImage(){
-        new DownloadImageTask(this.thumbnail, false).execute("http://192.168.1.115:3000/thumbnail/" + this._id + "/600x600");
+        new DownloadImageTask(this.thumbnail, false).execute(Resources.getSystem().getString(R.string.ip) + "/image/" + this._id);
     }
 
     public void setThumbnail(Bitmap result){
-        this.thumbnail = Bitmap.createScaledBitmap(result,width/3,width/3,false);
+        int ratio = result.getHeight() / result.getWidth();
+        int newWidth = width/4;
+        this.thumbnail = Bitmap.createScaledBitmap(result,newWidth,newWidth*ratio,false);
+
         txtV.setVisibility(View.VISIBLE);
         this.imgV.setImageBitmap(this.thumbnail);
     }
@@ -58,6 +65,7 @@ public class movieObject  {
 
     public void setImageView(ImageView imgV){
         this.imgV = imgV;
+        getThumbnail();
     }
 
     public void setTextView(TextView txtV){
@@ -90,10 +98,10 @@ public class movieObject  {
         protected void onPostExecute(Bitmap result) {
             Log.d("Prog","Finish");
             if(getSmall) {
-                setThumbnail(getRoundedCornerBitmap(result));
+                setThumbnail(result);
             }
             else{
-                setBioImage(getRoundedCornerBitmap(result));
+                setBioImage(result);
             }
         }
     }
@@ -117,5 +125,10 @@ public class movieObject  {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         return output;
+    }
+
+    public static float dipToPixels(Context context, float dipValue) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 }

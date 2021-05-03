@@ -10,7 +10,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/watchButton"
         tools:layout_editor_absoluteX="8dp">
 
         <LinearLayout
@@ -39,7 +38,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="19dp"
                 app:layout_constraintTop_toBottomOf="@+id/watchButton"
-                app:srcCompat="@drawable/thhd"
+
                 tools:layout_editor_absoluteX="16dp" />
 
             <TextView

@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -19,6 +21,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -36,11 +41,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BrowseActivity extends AppCompatActivity {
+
 
     GridView gv;
     ArrayList<HashMap<String, String>> allGenres;
@@ -60,8 +67,20 @@ public class BrowseActivity extends AppCompatActivity {
 
         allGenres = new ArrayList<HashMap<String, String>>();
         allCategories = new ArrayList<HashMap<String, String>>();
-
-
+        ArrayList tvs = new ArrayList();
+        RelativeLayout containerHolder = (RelativeLayout)findViewById(R.id.containerHolder);
+        for (int i = 0; i<containerHolder.getChildCount(); i++){
+            Log.d("instance",String.valueOf(containerHolder.getChildAt(i) instanceof TextView));
+            if (containerHolder.getChildAt(i) instanceof TextView && !(containerHolder.getChildAt(i) instanceof Button)) {
+                containerHolder.getChildAt(i).setVisibility(View.GONE);
+                tvs.add(containerHolder.getChildAt(i));
+            }
+            if (containerHolder.getChildAt(i) instanceof HorizontalScrollView) {
+                containerHolder.getChildAt(i).setVisibility(View.GONE);
+                containerHolder.getChildAt(i).setTag(tvs.get(0));
+                tvs.clear();
+            }
+        }
         //getActionBar()
 
 
@@ -113,7 +132,8 @@ public class BrowseActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
-                        //Log.d("Error.Response", response);
+                        displayError(cA, containerID);
+                        Log.d("Error.Response", "error");
                     }
                 }
         ) {
@@ -129,7 +149,9 @@ public class BrowseActivity extends AppCompatActivity {
                 JSONObject jsonBodyObj = new JSONObject();
 
                 //String genreArray =  gA.toArray().toString();
-                String catArray = cA.get(0).toString();
+                JSONArray catArray = new JSONArray(cA);
+
+                Log.d("array", catArray.toString());
                 try {
                     //jsonBodyObj.put("genre", genreArray);
                     jsonBodyObj.put("category", catArray);
@@ -176,6 +198,7 @@ public class BrowseActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // error
+
                         //Log.d("Error.Response", response);
                     }
                 }
@@ -264,9 +287,42 @@ public class BrowseActivity extends AppCompatActivity {
 
             LayoutInflater inflater =  (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.video_tile, null);
-            ((TextView) view.findViewById(R.id.titleTextView)).setText(mO.title);
-            mO.imgV = ((ImageView) view.findViewById(R.id.imageView));
+            TextView titleTV = (TextView) view.findViewById(R.id.titleTextView);
+            mO.setTextView(titleTV);
+            titleTV.setText(mO.title);
+            mO.setImageView((ImageView) view.findViewById(R.id.imageView));
+            ((LinearLayout)sv.getChildAt(0)).addView(view);
+
+            ((HorizontalScrollView) findViewById(containerID)).setVisibility(View.VISIBLE);
+            ((TextView)(((HorizontalScrollView) findViewById(containerID)).getTag())).setVisibility(View.VISIBLE);
         }
+
+
+    }
+
+    void displayError(final ArrayList cA, final int containerID)  {
+        HorizontalScrollView sv = (HorizontalScrollView) findViewById(containerID);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        movieObject mO;
+        String _id;
+        String title;
+        String bio;
+        String category;
+
+
+
+        LayoutInflater inflater =  (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.video_tile, null);
+        ((TextView) view.findViewById(R.id.titleTextView)).setText("Error Loading Titles, Tap To Retry");
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getContentPOST(cA, containerID);
+            }
+        });
+        ((LinearLayout)sv.getChildAt(0)).addView(view);
 
     }
 
@@ -312,8 +368,8 @@ public class BrowseActivity extends AppCompatActivity {
                 getContentPOST(cA2, R.id.containerMovies);
             }
             if(allCategories.get(i).containsValue("TV Series")){
-                cA2.add(allCategories.get(i).keySet().toArray()[0]);
-                getContentPOST(cA2, R.id.containerTV);
+                cA3.add(allCategories.get(i).keySet().toArray()[0]);
+                getContentPOST(cA3, R.id.containerTV);
             }
         }
 
@@ -331,6 +387,41 @@ public class BrowseActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_example, popup.getMenu());
         popup.show();
         decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    public void showMenu(View v) {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        LayoutInflater inflater = (LayoutInflater) BrowseActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popup_menu, null);
+        int windowWidth = (int) Math.floor(size.x/2);
+        int windowHeight =(int)Math.floor(size.y/2);
+        PopupWindow window = new PopupWindow(layout, windowWidth,  windowHeight, true);
+        //window.setFocusable(true);
+        window.setBackgroundDrawable(new BitmapDrawable());
+        window.setOutsideTouchable(true);
+        window.showAtLocation(layout, Gravity.CENTER, 0, 0);
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        //window.dismiss();
+    }
+
+    public void goToProfile(View v) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
+    public void logout(View v) {
+        finish();
     }
 
 

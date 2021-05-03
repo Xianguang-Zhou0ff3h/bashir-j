@@ -39,7 +39,8 @@
         <activity
             android:name=".SignUpGenresActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainMenuActivity"></activity>
+        <activity android:name=".MainMenuActivity" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>
