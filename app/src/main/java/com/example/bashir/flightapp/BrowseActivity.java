@@ -48,7 +48,7 @@ import java.util.Map;
 
 public class BrowseActivity extends AppCompatActivity {
 
-
+    PopupWindow window;
     GridView gv;
     ArrayList<HashMap<String, String>> allGenres;
     ArrayList<HashMap<String, String>> allCategories;
@@ -77,6 +77,7 @@ public class BrowseActivity extends AppCompatActivity {
             }
             if (containerHolder.getChildAt(i) instanceof HorizontalScrollView) {
                 containerHolder.getChildAt(i).setVisibility(View.GONE);
+                Log.d("idk", String.valueOf(tvs.size()));
                 containerHolder.getChildAt(i).setTag(tvs.get(0));
                 tvs.clear();
             }
@@ -267,6 +268,7 @@ public class BrowseActivity extends AppCompatActivity {
 
 
     void displayTitles(String response, int containerID) throws JSONException {
+        final Context context = this;
         HorizontalScrollView sv = (HorizontalScrollView) findViewById(containerID);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -281,7 +283,7 @@ public class BrowseActivity extends AppCompatActivity {
             _id = (((JSONObject)mainObject.get(i)).getString("_id"));
             title = (((JSONObject)mainObject.get(i)).getString("title"));
             bio = (((JSONObject)mainObject.get(i)).getString("bio"));
-            mO = new movieObject(_id,title,bio);
+            mO = new movieObject(_id,title,bio,this);
             //mO.getThumbnail();
             mO.width = size.x;
 
@@ -290,12 +292,30 @@ public class BrowseActivity extends AppCompatActivity {
             TextView titleTV = (TextView) view.findViewById(R.id.titleTextView);
             mO.setTextView(titleTV);
             titleTV.setText(mO.title);
-            mO.setImageView((ImageView) view.findViewById(R.id.imageView));
-            ((LinearLayout)sv.getChildAt(0)).addView(view);
+            ImageView titleIV = (ImageView) view.findViewById(R.id.imageView);
+            mO.setImageView(titleIV);
+            titleIV.setClickable(true);
+            final movieObject finalMO = mO;
+            titleIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            ((HorizontalScrollView) findViewById(containerID)).setVisibility(View.VISIBLE);
-            ((TextView)(((HorizontalScrollView) findViewById(containerID)).getTag())).setVisibility(View.VISIBLE);
+                    Intent intent = new Intent(context, ContentBioActivity.class);
+                    //intent.putExtra("bio",mO.bio);
+                    intent.putExtra("title", finalMO.title);
+                    intent.putExtra("_id", finalMO._id);
+                    intent.putExtra("bio", finalMO.bio);
+                    context.startActivity(intent);
+                }
+            });
+            ((LinearLayout)sv.getChildAt(0)).addView(view);
+            sv.setVisibility(View.VISIBLE);
+            TextView upperText = (TextView) sv.getTag();
+            upperText.setVisibility(View.VISIBLE);
+
+
         }
+        //setContentView(R.layout.activity_browse);
 
 
     }
@@ -398,7 +418,7 @@ public class BrowseActivity extends AppCompatActivity {
         View layout = inflater.inflate(R.layout.popup_menu, null);
         int windowWidth = (int) Math.floor(size.x/2);
         int windowHeight =(int)Math.floor(size.y/2);
-        PopupWindow window = new PopupWindow(layout, windowWidth,  windowHeight, true);
+        window = new PopupWindow(layout, windowWidth,  windowHeight, true);
         //window.setFocusable(true);
         window.setBackgroundDrawable(new BitmapDrawable());
         window.setOutsideTouchable(true);
@@ -421,6 +441,7 @@ public class BrowseActivity extends AppCompatActivity {
     }
 
     public void logout(View v) {
+        window.dismiss();
         finish();
     }
 

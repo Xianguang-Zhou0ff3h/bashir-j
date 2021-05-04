@@ -2,6 +2,7 @@ package com.example.bashir.flightapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,16 +24,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
-
-    EditText password;
-    EditText username;
+    String WrongInputColor = "#ffb3b3";
+    EditText passwordTV;
+    EditText usernameTV;
     Button login;
     String UID;
 
@@ -48,8 +52,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
-        username = (EditText) findViewById(R.id.userEditText);
-        password = (EditText) findViewById(R.id.passEditText);
+        usernameTV = (EditText) findViewById(R.id.userEditText);
+        passwordTV = (EditText) findViewById(R.id.passEditText);
         login = (Button) findViewById(R.id.loginButton);
 
 
@@ -73,8 +77,25 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void loginButton(View v) {
         //sendPost(username.getText().toString(),password.getText().toString());
-        Intent intent = new Intent(this, BrowseActivity.class);
-        startActivity(intent);
+        String username = usernameTV.getText().toString();
+        String password = passwordTV.getText().toString();
+        boolean proceed = true;
+        if(username.equals("")){
+            proceed = false;
+            //usernameTV.setText("");
+            usernameTV.setHint("Please enter a valid username");
+            usernameTV.setHintTextColor(Color.parseColor(WrongInputColor));
+        }
+        if(password.equals("")){
+            proceed = false;
+            //passwordTV.setText("");
+            passwordTV.setHint("Please enter a valid password");
+            passwordTV.setHintTextColor(Color.parseColor(WrongInputColor));
+        }
+        if(proceed) {
+            sendLoginPOST(username,password);
+        }
+
     }
 
     public void signUpButton(View v) {
@@ -83,22 +104,49 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void sendPost(final String user, final String pass) {
+    public void checkResponse(String response) throws JSONException {
+        Log.d("responselogin",response);
+        JSONObject mainObject = new JSONObject(response);
+
+        int parsed = (int) mainObject.get("status");
+        if (parsed == 1){
+            UID = (String) mainObject.get("uid");
+            SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            edit.putString("UID", UID);
+            Intent intent = new Intent(this, BrowseActivity.class);
+            startActivity(intent);
+        }
+        else if(parsed == 0){
+            passwordTV.setText("");
+            passwordTV.setHint("Password is incorrect");
+            passwordTV.setHintTextColor(Color.parseColor(WrongInputColor));
+        }
+        else if(parsed == -1){
+            usernameTV.setText("");
+            passwordTV.setText("");
+            usernameTV.setHint("Username does not exist");
+            usernameTV.setHintTextColor(Color.parseColor(WrongInputColor));
+        }
+    }
+
+    public void sendLoginPOST(final String user, final String pass) {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = getString(R.string.ip) + "/getContent";
+        String url = getString(R.string.ip) + "/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
                     @Override
                     public void onResponse(String response) {
-                        /*
+
+
                         try {
-                            displayTitles(response);
+                            checkResponse(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        */
+
+
                         Log.d("Response", response);
                     }
                 },
@@ -112,11 +160,31 @@ public class LoginActivity extends AppCompatActivity {
                 }
         ) {
             @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+
+                //String genreArray =  gA.toArray().toString();
+
+                try {
+                    //jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("username", user);
+                    jsonBodyObj.put("password", pass);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+            @Override
             protected Map<String, String> getParams()
             {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("user", user);
-                params.put("pass", pass);
 
                 return params;
             }

@@ -16,7 +16,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -34,26 +36,40 @@ public class movieObject  {
     ImageView imgV;
     ImageView imgV2;
     TextView txtV;
+    Context context;
     String bio;
-    movieObject(String _id, String title, String bio){
+    movieObject(String _id, String title, String bio, Context context){
         this._id=_id;
         this.title=title;
         this.bio = bio;
+        this.context = context;
     }
 
     public void getThumbnail(){
-        new DownloadImageTask(this.thumbnail , true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Resources.getSystem().getString(R.string.ip) + "/image/" + this._id );
+        new DownloadImageTask(this.thumbnail , true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, context.getApplicationContext().getString(R.string.ip) + "/image/" + this._id );
         //new DownloadImageTask(this.thumbnail , true).execute("http://192.168.1.115:3000/thumbnail/" + this._id + "/150x150");
     }
 
     public void getBioImage(){
-        new DownloadImageTask(this.thumbnail, false).execute(Resources.getSystem().getString(R.string.ip) + "/image/" + this._id);
+        new DownloadImageTask(this.thumbnail, false).execute(context.getApplicationContext().getString(R.string.ip) + "/image/" + this._id);
     }
 
     public void setThumbnail(Bitmap result){
-        int ratio = result.getHeight() / result.getWidth();
+
+        double ratio = result.getHeight() * 1.0 / result.getWidth();
+        double fixedRatio;
+        if(ratio > 1.1){
+            fixedRatio = 1.5;
+        }
+        else{
+            fixedRatio = 1;
+        }
         int newWidth = width/4;
-        this.thumbnail = Bitmap.createScaledBitmap(result,newWidth,newWidth*ratio,false);
+        int newHeight = (int) (newWidth*fixedRatio);
+        Log.d(this.title, String.valueOf(ratio));
+        Log.d(this.title, String.valueOf(newWidth));
+        Log.d(this.title, String.valueOf(newHeight));
+        this.thumbnail = Bitmap.createScaledBitmap(result,newWidth,newHeight,false);
 
         txtV.setVisibility(View.VISIBLE);
         this.imgV.setImageBitmap(this.thumbnail);

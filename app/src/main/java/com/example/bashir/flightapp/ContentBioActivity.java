@@ -18,7 +18,7 @@ public class ContentBioActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra("title");
         String _id = getIntent().getStringExtra("_id");
         String bio = getIntent().getStringExtra("bio");
-        mO = new movieObject(_id,title, bio);
+        mO = new movieObject(_id,title, bio, this);
         mO.getBioImage();
 
 
