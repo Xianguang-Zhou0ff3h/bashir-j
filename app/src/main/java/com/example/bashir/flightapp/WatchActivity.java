@@ -1,6 +1,8 @@
 package com.example.bashir.flightapp;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +30,8 @@ import java.util.Map;
 
 public class WatchActivity extends AppCompatActivity {
     String UID;
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +44,11 @@ public class WatchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_watch);
         getSupportActionBar().hide();
         VideoView videoView = (VideoView) findViewById(R.id.videoView);
-        UID = PreferenceManager.getDefaultSharedPreferences(this).getString("UID" , "");
+        prefs = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        editor = prefs.edit();
+
+        UID = prefs.getString("UID" , "null");
+        Log.d("uid", UID);
         sendLogPOST(UID, id);
         try {
             String link = getString(R.string.ip) + "/streamvideo/" + id;

@@ -1,5 +1,6 @@
 package com.example.bashir.flightapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -38,12 +39,14 @@ public class LoginActivity extends AppCompatActivity {
     EditText usernameTV;
     Button login;
     String UID;
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        edit.putString("UID", UID);
+        editor.putString("UID", UID);
+        editor.commit();
     }
 
     @Override
@@ -51,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
+
+        prefs = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        editor = prefs.edit();
 
         usernameTV = (EditText) findViewById(R.id.userEditText);
         passwordTV = (EditText) findViewById(R.id.passEditText);
@@ -73,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-        UID = PreferenceManager.getDefaultSharedPreferences(this).getString("UID" , "");
+        UID = prefs.getString("UID" , "");
     }
     public void loginButton(View v) {
         //sendPost(username.getText().toString(),password.getText().toString());
@@ -111,8 +117,8 @@ public class LoginActivity extends AppCompatActivity {
         int parsed = (int) mainObject.get("status");
         if (parsed == 1){
             UID = (String) mainObject.get("uid");
-            SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-            edit.putString("UID", UID);
+            editor.putString("UID", UID);
+            editor.commit();
             Intent intent = new Intent(this, BrowseActivity.class);
             startActivity(intent);
         }
