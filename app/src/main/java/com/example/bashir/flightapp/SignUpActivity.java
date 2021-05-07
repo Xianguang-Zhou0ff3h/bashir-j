@@ -30,7 +30,6 @@ import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
     String WrongInputColor = "#ffb3b3";
-    String url = "192.168.1.115:3000/";
     Button btn_next;
     EditText firstname,lastname,username,password,repassword;
     TableLayout table;
@@ -87,41 +86,15 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 if (!Bool_firstname && !Bool_lastname && !Bool_username && !Bool_DifferentPass){
                     //Send username and password to Server
-                    RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
 
-                    StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                            new Response.Listener<String>()
-                            {
-                                @Override
-                                public void onResponse(String response) {
-                                    // response
-                                    //Log.d("Response", response);
-                                }
-                            },
-                            new Response.ErrorListener()
-                            {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    // error
-                                    // Log.d("Error.Response", response);
-                                    Intent intent = new Intent(getApplicationContext(), SignUpCategoryActivity.class);
-                                    startActivity(intent);
-                                }
-                            }
-                    ) {
-                        @Override
-                        protected Map<String, String> getParams()
-                        {
-                            Map<String, String>  params = new HashMap<String, String>();
-                            params.put("username", username.getText().toString());
-                            params.put("password", password.getText().toString());
-                            params.put("name", firstname.getText().toString() + " " + lastname.getText().toString());
-                            return params;
-                        }
-                    };
-                    queue.add(postRequest);
+                    Intent intent = new Intent(getApplicationContext(), SignUpCategoryActivity.class);
 
+                    intent.putExtra("username",username.getText().toString());
+                    intent.putExtra("password",password.getText().toString());
+                    intent.putExtra("firstname",firstname.getText().toString());
+                    intent.putExtra("lastname",lastname.getText().toString());
 
+                    startActivity(intent);
                 }
             }
         });

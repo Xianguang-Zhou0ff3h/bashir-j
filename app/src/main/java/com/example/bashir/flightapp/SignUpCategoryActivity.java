@@ -20,13 +20,15 @@ public class SignUpCategoryActivity extends AppCompatActivity{
     String UnSelected = "#ad343e";
     Boolean TVselected = false, Moviesselected = false , Musicselected = false;
     SharedPreferences shared ;
-
+    Intent previntent;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_category);
         getSupportActionBar().hide();
+
+        previntent = getIntent();
 
         //192.168.1.115:300/findfilters/categories
         btn_next = (Button)findViewById(R.id.btn_next);
@@ -94,6 +96,10 @@ public class SignUpCategoryActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SignUpGenresActivity.class);
+                intent.putExtra("username",previntent.getStringExtra("username"));
+                intent.putExtra("password",previntent.getStringExtra("password"));
+                intent.putExtra("firstname",previntent.getStringExtra("firstname"));
+                intent.putExtra("lastname",previntent.getStringExtra("lastname"));
                 intent.putExtra("tvSelected", TVselected);
                 intent.putExtra("movieSelected", Moviesselected);
                 intent.putExtra("musicSelected", Musicselected);

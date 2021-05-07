@@ -51,7 +51,6 @@ public class SignUpGenresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_genres);
         getSupportActionBar().hide();
-        url = getString(R.string.ip) + "/applicableGenres";
         TvSel = getIntent().getBooleanExtra("tvSelected", false);
         MovieSel = getIntent().getBooleanExtra("movieSelected", false);
         MusicSel = getIntent().getBooleanExtra("musicSelected", false);
@@ -68,78 +67,7 @@ public class SignUpGenresActivity extends AppCompatActivity {
 
         sendPost();
 
-        String response = "[\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871058f963815e7b73b2aa\",\n" +
-                "        \"genre\": \"Classic\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871061f963815e7b73b2ab\",\n" +
-                "        \"genre\": \"Crime\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a87106bf963815e7b73b2ac\",\n" +
-                "        \"genre\": \"Mythology\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871072f963815e7b73b2ad\",\n" +
-                "        \"genre\": \"Thriller\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871079f963815e7b73b2ae\",\n" +
-                "        \"genre\": \"Comedy\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871080f963815e7b73b2af\",\n" +
-                "        \"genre\": \"Mystery\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871087f963815e7b73b2b0\",\n" +
-                "        \"genre\": \"Western\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871092f963815e7b73b2b1\",\n" +
-                "        \"genre\": \"Horror\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5a871099f963815e7b73b2b2\",\n" +
-                "        \"genre\": \"Fantasy\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5ac3292b7dd6aecf4adbee24\",\n" +
-                "        \"genre\": \"Contemporary R&B\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5ac329447dd6aecf4adbee49\",\n" +
-                "        \"genre\": \"R&B/soul\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5ac329647dd6aecf4adbee60\",\n" +
-                "        \"genre\": \"Alternative R&B\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5ac329b37dd6aecf4adbeec9\",\n" +
-                "        \"genre\": \"Pop\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5ac329e17dd6aecf4adbeef1\",\n" +
-                "        \"genre\": \"Trap Music\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5ac32a167dd6aecf4adbef2b\",\n" +
-                "        \"genre\": \"Downtempo\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "        \"_id\": \"5ac32a2e7dd6aecf4adbef4d\",\n" +
-                "        \"genre\": \"Trip hop\"\n" +
-                "    }\n" +
 
-                "]";
-        try {
-            displayGenres(response);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public void sendPost() {
