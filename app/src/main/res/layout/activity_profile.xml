@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,4 +7,341 @@
     android:background="@color/blueBG"
     tools:context="com.example.bashir.flightapp.ProfileActivity">
 
-</TableLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            >
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/txt_firstname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="First Name"
+                        android:textColor="@android:color/background_light" />
+
+                    <EditText
+                        android:id="@+id/editText_firstname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_corner_txtview"
+                        android:backgroundTintMode="src_in"
+                        android:drawableTint="#ad343e"
+                        android:drawableTintMode="src_over"
+                        android:ems="10"
+                        android:fontFamily="sans-serif-condensed"
+                        android:foregroundTint="#ad343e"
+                        android:foregroundTintMode="src_over"
+                        android:inputType="textPersonName"
+                        android:padding="15dp"
+                        android:shadowColor="@android:color/background_light"
+                        android:text="First name"
+                        android:textColor="@android:color/darker_gray"
+                        android:textColorHighlight="@android:color/holo_red_dark"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textColorLink="@android:color/background_light"
+                        android:textSize="18sp"
+                        tools:layout_editor_absoluteX="49dp"
+                        tools:layout_editor_absoluteY="179dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/txt_lastname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="Last Name"
+                        android:textColor="@android:color/background_light" />
+
+                    <EditText
+                        android:id="@+id/editText_lastname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_corner_txtview"
+                        android:backgroundTintMode="src_in"
+                        android:drawableTint="#ad343e"
+                        android:drawableTintMode="src_over"
+                        android:ems="10"
+                        android:fontFamily="sans-serif-condensed"
+                        android:foregroundTint="#ad343e"
+                        android:foregroundTintMode="src_over"
+                        android:inputType="textPersonName"
+                        android:padding="15dp"
+                        android:shadowColor="@android:color/background_light"
+                        android:text="Last name"
+                        android:textColor="@android:color/darker_gray"
+                        android:textColorHighlight="@android:color/holo_red_dark"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textColorLink="@android:color/background_light"
+                        android:textSize="18sp"
+                        tools:layout_editor_absoluteX="49dp"
+                        tools:layout_editor_absoluteY="179dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/txt_age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="Birthdate (YYYY)"
+                        android:textColor="@android:color/background_light"
+
+                        />
+
+                    <EditText
+                        android:id="@+id/editText_age"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="5dp"
+
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_corner_txtview"
+                        android:backgroundTintMode="src_in"
+                        android:drawableTint="#ad343e"
+                        android:drawableTintMode="src_over"
+                        android:ems="10"
+                        android:fontFamily="sans-serif-condensed"
+                        android:foregroundTint="#ad343e"
+                        android:foregroundTintMode="src_over"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:padding="15dp"
+                        android:shadowColor="@android:color/background_light"
+                        android:text="Age"
+                        android:textColor="@android:color/darker_gray"
+                        android:textColorHighlight="@android:color/holo_red_dark"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textColorLink="@android:color/background_light"
+                        android:textSize="18sp"
+                        tools:layout_editor_absoluteX="49dp"
+                        tools:layout_editor_absoluteY="179dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/txt_password"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="Password"
+                        android:textColor="@android:color/background_light" />
+
+                    <EditText
+                        android:id="@+id/editText_passwordedit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_corner_txtview"
+                        android:backgroundTintMode="src_in"
+                        android:drawableTint="#ad343e"
+                        android:drawableTintMode="src_over"
+                        android:ems="10"
+                        android:fontFamily="sans-serif-condensed"
+                        android:foregroundTint="#ad343e"
+                        android:foregroundTintMode="src_over"
+                        android:hint="Empty for no change"
+                        android:inputType="textPassword"
+                        android:padding="15dp"
+                        android:shadowColor="@android:color/background_light"
+                        android:textColor="@android:color/darker_gray"
+                        android:textColorHighlight="@android:color/holo_red_dark"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textColorLink="@android:color/background_light"
+                        android:textSize="18sp"
+                        tools:layout_editor_absoluteX="49dp"
+
+                        tools:layout_editor_absoluteY="179dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/txt_repassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="Rewrite Password"
+                        android:textColor="@android:color/background_light" />
+
+                    <EditText
+                        android:id="@+id/editText_repasswordedit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_corner_txtview"
+                        android:backgroundTintMode="src_in"
+                        android:drawableTint="#ad343e"
+                        android:drawableTintMode="src_over"
+                        android:ems="10"
+                        android:fontFamily="sans-serif-condensed"
+                        android:foregroundTint="#ad343e"
+                        android:foregroundTintMode="src_over"
+                        android:hint="Empty for no change"
+                        android:inputType="textPassword"
+                        android:padding="15dp"
+                        android:shadowColor="@android:color/background_light"
+                        android:textColor="@android:color/darker_gray"
+                        android:textColorHighlight="@android:color/holo_red_dark"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textColorLink="@android:color/background_light"
+                        android:textSize="18sp"
+                        tools:layout_editor_absoluteX="49dp"
+                        tools:layout_editor_absoluteY="179dp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:weightSum="1">
+
+
+                    <TextView
+                        android:id="@+id/txt_spy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:text="Do you want us to spy on you to provide good recommendations?"
+                        android:textColor="@android:color/background_light" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:buttonTint="@android:color/background_light" />
+
+
+                </TableRow>
+
+                <Button
+                    android:id="@+id/btn_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Edit"
+
+                    android:background="@drawable/custombutton"
+                    android:textColor="@android:color/background_light"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="45dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+
+                    />
+
+                <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit Changes"
+
+                    android:background="@drawable/custombutton"
+                    android:textColor="@android:color/background_light"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="45dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    />
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/custombutton"
+                    android:text="Cancel"
+                    android:textColor="@android:color/background_light" />
+
+
+            </TableLayout>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

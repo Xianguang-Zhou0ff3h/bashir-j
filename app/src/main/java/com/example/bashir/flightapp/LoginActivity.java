@@ -35,6 +35,7 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     String WrongInputColor = "#ffb3b3";
+    TextView networkError;
     EditText passwordTV;
     EditText usernameTV;
     Button login;
@@ -61,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         usernameTV = (EditText) findViewById(R.id.userEditText);
         passwordTV = (EditText) findViewById(R.id.passEditText);
         login = (Button) findViewById(R.id.loginButton);
-
+        networkError = (TextView) findViewById(R.id.networkErrorTV);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
     protected void onResume() {
         super.onResume();
         View decorView = getWindow().getDecorView();
@@ -81,8 +83,10 @@ public class LoginActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
         UID = prefs.getString("UID" , "");
     }
+
     public void loginButton(View v) {
         //sendPost(username.getText().toString(),password.getText().toString());
+        networkError.setVisibility(View.GONE);
         String username = usernameTV.getText().toString();
         String password = passwordTV.getText().toString();
         boolean proceed = true;
@@ -110,30 +114,13 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void checkResponse(String response) throws JSONException {
-        Log.d("responselogin",response);
-        JSONObject mainObject = new JSONObject(response);
-
-        int parsed = (int) mainObject.get("status");
-        if (parsed == 1){
-            UID = (String) mainObject.get("uid");
-            editor.putString("UID", UID);
-            editor.commit();
-            Intent intent = new Intent(this, BrowseActivity.class);
-            startActivity(intent);
-        }
-        else if(parsed == 0){
-            passwordTV.setText("");
-            passwordTV.setHint("Password is incorrect");
-            passwordTV.setHintTextColor(Color.parseColor(WrongInputColor));
-        }
-        else if(parsed == -1){
-            usernameTV.setText("");
-            passwordTV.setText("");
-            usernameTV.setHint("Username does not exist");
-            usernameTV.setHintTextColor(Color.parseColor(WrongInputColor));
-        }
+    public void debug(View v) {
+        //sendPost(username.getText().toString(),password.getText().toString());
+        Intent intent = new Intent(this, SignUpCategoryActivity.class);
+        startActivity(intent);
     }
+
+
 
     public void sendLoginPOST(final String user, final String pass) {
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -160,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        displayNetworkError();
                         // error
                         //Log.d("Error.Response", response);
                     }
@@ -199,5 +187,32 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public void checkResponse(String response) throws JSONException {
+        Log.d("responselogin",response);
+        JSONObject mainObject = new JSONObject(response);
 
+        int parsed = (int) mainObject.get("status");
+        if (parsed == 1){
+            UID = (String) mainObject.get("uid");
+            editor.putString("UID", UID);
+            editor.commit();
+            Intent intent = new Intent(this, BrowseActivity.class);
+            startActivity(intent);
+        }
+        else if(parsed == 0){
+            passwordTV.setText("");
+            passwordTV.setHint("Password is incorrect");
+            passwordTV.setHintTextColor(Color.parseColor(WrongInputColor));
+        }
+        else if(parsed == -1){
+            usernameTV.setText("");
+            passwordTV.setText("");
+            usernameTV.setHint("Username does not exist");
+            usernameTV.setHintTextColor(Color.parseColor(WrongInputColor));
+        }
+    }
+
+    public void displayNetworkError() {
+        networkError.setVisibility(View.VISIBLE);
+    }
 }

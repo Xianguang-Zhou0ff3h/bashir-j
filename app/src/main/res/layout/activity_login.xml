@@ -25,6 +25,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="66dp"
+                android:clickable="true"
+                android:onClick="debug"
                 android:src="@drawable/logo" />
 
             <EditText
@@ -58,10 +60,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/imageView3"
+                android:layout_below="@+id/networkErrorTV"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_marginTop="66dp"
                 android:background="@drawable/rounded_corner_txtview"
                 android:backgroundTintMode="src_in"
                 android:drawableTint="#ad343e"
@@ -80,6 +81,20 @@
                 android:textColorLink="@android:color/background_light"
                 tools:layout_editor_absoluteX="49dp"
                 tools:layout_editor_absoluteY="179dp" />
+
+            <TextView
+                android:id="@+id/networkErrorTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/userEditText"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignRight="@+id/userEditText"
+                android:layout_below="@+id/imageView3"
+                android:text="Network Error! Please check your connection and try again."
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/loginButton"

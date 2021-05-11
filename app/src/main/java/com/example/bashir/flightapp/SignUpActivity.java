@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 //import java.nio.channels.InterruptedByTimeoutException;
@@ -33,9 +36,9 @@ public class SignUpActivity extends AppCompatActivity {
     Button btn_next;
     EditText firstname,lastname,username,password,repassword;
     TableLayout table;
-
+    Boolean usernameValid;
     SharedPreferences signinfo;
-
+    TextView promptText;
 
 
     @Override
@@ -50,10 +53,20 @@ public class SignUpActivity extends AppCompatActivity {
         password = (EditText)findViewById(R.id.editText_Password);
         repassword = (EditText)findViewById(R.id.editText_RePassword);
         btn_next = (Button)findViewById(R.id.Btn_Next);
+        promptText = (TextView) findViewById(R.id.promptTextView);
 
         table = (TableLayout)findViewById(R.id.table_layout);
         signinfo = PreferenceManager.getDefaultSharedPreferences(this);
 
+        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus && !username.getText().toString().equals("")){
+                    promptText.setVisibility(View.GONE);
+                    checkUsernamePOST();
+                }
+            }
+        });
 
         btn_next.setOnClickListener(new View.OnClickListener()  {
             @Override
@@ -61,6 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
                 Boolean Bool_firstname = firstname.getText().toString().equals("");
                 Boolean Bool_lastname = lastname.getText().toString().equals("");
                 Boolean Bool_username = username.getText().toString().equals("");
+                Boolean Bool_PassShort = (password.getText().toString().length() < 6);
                 Boolean Bool_DifferentPass = !password.getText().toString().equals(repassword.getText().toString()) ||
                         password.getText().toString().equals("") || repassword.getText().toString().equals("");
                 if (Bool_firstname){
@@ -73,6 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
                 if (Bool_username){
                     // username.setHint("This field is empty");
+                    promptText.setVisibility(View.GONE);
                     username.setHintTextColor(Color.parseColor(WrongInputColor));
                 }
                 if (Bool_DifferentPass){
@@ -84,20 +99,150 @@ public class SignUpActivity extends AppCompatActivity {
                     repassword.setHintTextColor(Color.parseColor(WrongInputColor));
 
                 }
-                if (!Bool_firstname && !Bool_lastname && !Bool_username && !Bool_DifferentPass){
+                if (Bool_PassShort){
+                    password.setText("");
+                    repassword.setText("");
+                    password.setHint("Password must be 6 characters or more");
+                    password.setHintTextColor(Color.parseColor(WrongInputColor));
+                    repassword.setHint("Password must be 6 characters or more");
+                    repassword.setHintTextColor(Color.parseColor(WrongInputColor));
+
+                }
+                if (!Bool_firstname && !Bool_lastname && !Bool_username && !Bool_DifferentPass && !Bool_PassShort){
                     //Send username and password to Server
+                    signUpPOST();
 
-                    Intent intent = new Intent(getApplicationContext(), SignUpCategoryActivity.class);
-
-                    intent.putExtra("username",username.getText().toString());
-                    intent.putExtra("password",password.getText().toString());
-                    intent.putExtra("firstname",firstname.getText().toString());
-                    intent.putExtra("lastname",lastname.getText().toString());
-
-                    startActivity(intent);
                 }
             }
         });
+    }
+
+    public void checkUsernamePOST() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = getString(R.string.ip) + "/checkUsername";
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        parseUsernameValidityResponse(response);
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        //Log.d("Error.Response", response);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+                //String genreArray =  gA.toArray().toString();
+
+                try {
+                    //jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("username", username.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+
+        };
+        queue.add(postRequest);
+
+    }
+
+    public void signUpPOST() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = getString(R.string.ip) + "/insertUser";
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        parseSignUpResponse(response);
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        //Log.d("Error.Response", response);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+                //String genreArray =  gA.toArray().toString();
+
+                try {
+                    //jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("username", username.getText().toString());
+                    jsonBodyObj.put("password", password.getText().toString());
+                    jsonBodyObj.put("firstname", firstname.getText().toString());
+                    jsonBodyObj.put("lastname", lastname.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+
+        };
+        queue.add(postRequest);
+
+    }
+
+    public void parseUsernameValidityResponse(String response) {
+        if (Boolean.parseBoolean(response)){
+            //valid user
+            promptText.setText("Username is valid!");
+            promptText.setTextColor(Color.parseColor("#32CD32"));
+            promptText.setVisibility(View.VISIBLE);
+        }else{
+            //invalid user
+            promptText.setText("Username is not valid!");
+            promptText.setTextColor(Color.parseColor("#cc0000"));
+            promptText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void parseSignUpResponse(String response) {
+        if (response.equals("null")){
+            //invalid user
+            promptText.setText("Username is not valid!");
+            promptText.setTextColor(Color.parseColor("#cc0000"));
+            promptText.setVisibility(View.VISIBLE);
+        }else{
+            //valid user
+            Intent intent = new Intent(getApplicationContext(), SignUpCategoryActivity.class);
+            intent.putExtra("uid", response);
+            Toast.makeText(this, "Account Created Successfully", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+        }
     }
 
     @Override

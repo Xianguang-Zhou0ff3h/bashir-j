@@ -431,6 +431,7 @@ public class BrowseActivity extends AppCompatActivity {
     }
 
     public void goToProfile(View v) {
+        window.dismiss();
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }

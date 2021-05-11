@@ -16,8 +16,7 @@ import android.widget.Button;
 
 public class SignUpCategoryActivity extends AppCompatActivity{
     Button btn_next, btn_tv,btn_music,btn_movies;
-    String Selected = "#872931";
-    String UnSelected = "#ad343e";
+
     Boolean TVselected = false, Moviesselected = false , Musicselected = false;
     SharedPreferences shared ;
     Intent previntent;
@@ -96,41 +95,31 @@ public class SignUpCategoryActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SignUpGenresActivity.class);
-                intent.putExtra("username",previntent.getStringExtra("username"));
-                intent.putExtra("password",previntent.getStringExtra("password"));
-                intent.putExtra("firstname",previntent.getStringExtra("firstname"));
-                intent.putExtra("lastname",previntent.getStringExtra("lastname"));
+
                 intent.putExtra("tvSelected", TVselected);
                 intent.putExtra("movieSelected", Moviesselected);
                 intent.putExtra("musicSelected", Musicselected);
-
+                intent.putExtra("uid", getIntent().getStringExtra("uid"));
                 startActivity(intent);
             }
         });
 
 
     }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
     @Override
     protected void onPause() {
-        SharedPreferences.Editor edit = shared.edit();
-        edit.putBoolean("tv", TVselected);
-        edit.putBoolean("movie", Moviesselected);
-        edit.putBoolean("music", Musicselected);
-        edit.commit();
-
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        TVselected = shared.getBoolean("tv",false);
-        Moviesselected = shared.getBoolean("movie",false);
-        Musicselected = shared.getBoolean("music",false);
-        if (TVselected)  btn_tv.setPressed(true);
-        if (Moviesselected)  btn_movies.setPressed(true);
-        if (Musicselected)  btn_music.setPressed(true);
-
     }
 }
 
