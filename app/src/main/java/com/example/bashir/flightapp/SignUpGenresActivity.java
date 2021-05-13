@@ -167,7 +167,7 @@ public class SignUpGenresActivity extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
 
         String url = getString(R.string.ip) + "/insertPreferences";
-
+        UID = UID.substring(1,UID.length() -1);
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -199,12 +199,14 @@ public class SignUpGenresActivity extends AppCompatActivity {
             public byte[] getBody() throws AuthFailureError {
                 JSONObject jsonBodyObj = new JSONObject();
                 //String genreArray =  gA.toArray().toString();
+                JSONArray catsjson = new JSONArray(cats);
+                JSONArray genrejson = new JSONArray(statuses);
 
                 try {
                     //jsonBodyObj.put("genre", genreArray);
                     jsonBodyObj.put("uid", UID);
-                    jsonBodyObj.put("category", cats.toString());
-                    jsonBodyObj.put("genre", statuses.toString());
+                    jsonBodyObj.put("category", catsjson);
+                    jsonBodyObj.put("genre", genrejson);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

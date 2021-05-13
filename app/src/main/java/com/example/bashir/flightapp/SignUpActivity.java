@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -39,6 +41,9 @@ public class SignUpActivity extends AppCompatActivity {
     Boolean usernameValid;
     SharedPreferences signinfo;
     TextView promptText;
+    RadioButton firstclass,busiclass,ecoclass;
+    CheckBox check;
+
 
 
     @Override
@@ -54,7 +59,11 @@ public class SignUpActivity extends AppCompatActivity {
         repassword = (EditText)findViewById(R.id.editText_RePassword);
         btn_next = (Button)findViewById(R.id.Btn_Next);
         promptText = (TextView) findViewById(R.id.promptTextView);
-
+        firstclass = (RadioButton)findViewById(R.id.rdb_firstclass2);
+        ecoclass = (RadioButton)findViewById(R.id.rdb_economyclass2);
+        busiclass = (RadioButton)findViewById(R.id.rdb_Businessclass2);
+        ecoclass.setSelected(true);
+        check = (CheckBox) findViewById(R.id.checkBox) ;
         table = (TableLayout)findViewById(R.id.table_layout);
         signinfo = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -205,6 +214,10 @@ public class SignUpActivity extends AppCompatActivity {
                     jsonBodyObj.put("password", password.getText().toString());
                     jsonBodyObj.put("firstname", firstname.getText().toString());
                     jsonBodyObj.put("lastname", lastname.getText().toString());
+                    jsonBodyObj.put("track", Boolean.toString(check.isChecked()));
+                    if (firstclass.isChecked()){jsonBodyObj.put("class", "First");}
+                    else if (busiclass.isChecked()){jsonBodyObj.put("class", "Business");}
+                    else if (ecoclass.isChecked()){jsonBodyObj.put("class", "Economy");}
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

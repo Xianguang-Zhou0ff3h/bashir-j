@@ -16,6 +16,7 @@ import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -45,18 +46,15 @@ public class ProfileActivity extends AppCompatActivity {
     String uid;
     Boolean passisempty = true;
     CheckBox check;
+    RadioButton firstclass,busiclass,ecoclass;
+
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         getSupportActionBar().hide();
-
-        prefs = getSharedPreferences("preferences", Context.MODE_PRIVATE);
-        editor = prefs.edit();
-
         firstname = (EditText)findViewById(R.id.editText_firstname);
         lastname = (EditText)findViewById(R.id.editText_lastname);
         password = (EditText)findViewById(R.id.editText_passwordedit);
@@ -64,6 +62,8 @@ public class ProfileActivity extends AppCompatActivity {
         age = (EditText)findViewById(R.id.editText_age);
         edit = (Button)findViewById(R.id.btn_edit);
         submit = (Button)findViewById(R.id.btn_submit);
+        prefs = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        editor = prefs.edit();
         uid = prefs.getString("UID", "");
         loading = (ProgressBar)findViewById(R.id.progressBar);
         yeartxt = (TextView)findViewById(R.id.txt_age);
@@ -74,13 +74,17 @@ public class ProfileActivity extends AppCompatActivity {
         txtspy = (TextView)findViewById(R.id.txt_spy);
         check = (CheckBox)findViewById(R.id.checkBox);
         cancel = (Button)findViewById(R.id.btn_cancel);
-
-
+        firstclass = (RadioButton)findViewById(R.id.rdb_firstclass);
+        ecoclass = (RadioButton)findViewById(R.id.rdb_economyclass);
+        busiclass = (RadioButton)findViewById(R.id.rdb_Businessclass);
 
         hideeverything();
 
         getuserinfo();
 
+        firstclass.setEnabled(false);
+        ecoclass.setEnabled(false);
+        busiclass.setEnabled(false);
         firstname.setEnabled(false);
         lastname.setEnabled(false);
         password.setEnabled(false);
@@ -92,6 +96,10 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 editedBool = true;
+
+                firstclass.setEnabled(true);
+                ecoclass.setEnabled(true);
+                busiclass.setEnabled(true);
                 firstname.setEnabled(true);
                 lastname.setEnabled(true);
                 password.setEnabled(true);
@@ -168,6 +176,9 @@ public class ProfileActivity extends AppCompatActivity {
                         repassword.setEnabled(false);
                         age.setEnabled(false);
                         check.setEnabled(false);
+                        firstclass.setEnabled(false);
+                        ecoclass.setEnabled(false);
+                        busiclass.setEnabled(false);
                         //Intent intent = new Intent(getApplicationContext(), BrowseActivity.class);
                         //startActivity(intent);
                     }
@@ -187,6 +198,9 @@ public class ProfileActivity extends AppCompatActivity {
                     repassword.setEnabled(false);
                     age.setEnabled(false);
                     check.setEnabled(false);
+                    firstclass.setEnabled(false);
+                    ecoclass.setEnabled(false);
+                    busiclass.setEnabled(false);
                 }
 
             }
@@ -205,6 +219,9 @@ public class ProfileActivity extends AppCompatActivity {
                 repassword.setEnabled(false);
                 age.setEnabled(false);
                 check.setEnabled(false);
+                firstclass.setEnabled(false);
+                ecoclass.setEnabled(false);
+                busiclass.setEnabled(false);
             }
         });
 
@@ -230,6 +247,11 @@ public class ProfileActivity extends AppCompatActivity {
                             String track = jsonBodyObj.getString("track");
                             if (track.equals("true")){check.setChecked(true);}
                             else check.setChecked(false);
+                            String seat_class = jsonBodyObj.getString("class");
+                            if (seat_class.equals("First")){firstclass.setChecked(true);busiclass.setChecked(false);ecoclass.setChecked(false);}
+                            else if (seat_class.equals("Economy")){firstclass.setChecked(false);busiclass.setChecked(false);ecoclass.setChecked(true);}
+                            else if (seat_class.equals("Business")){firstclass.setChecked(false);busiclass.setChecked(true);ecoclass.setChecked(false);}
+
                         }
                         catch (JSONException e){
 
@@ -281,6 +303,11 @@ public class ProfileActivity extends AppCompatActivity {
                             String track = jsonBodyObj.getString("track");
                             if (track.equals("true")){check.setChecked(true);}
                             else check.setChecked(false);
+                            String seat_class = jsonBodyObj.getString("class");
+                            if (seat_class.equals("First")){firstclass.setChecked(true);busiclass.setChecked(false);ecoclass.setChecked(false);}
+                            else if (seat_class.equals("Economy")){firstclass.setChecked(false);busiclass.setChecked(false);ecoclass.setChecked(true);}
+                            else if (seat_class.equals("Business")){firstclass.setChecked(false);busiclass.setChecked(true);ecoclass.setChecked(false);}
+
                         }
                         catch (JSONException e){
 
@@ -317,6 +344,9 @@ public class ProfileActivity extends AppCompatActivity {
                     if (check.isChecked()){jsonBodyObj.put("track", "true" );}
                     else jsonBodyObj.put("track", "false" );
                     if (!passisempty) jsonBodyObj.put("password", password.getText().toString() );
+                    if (firstclass.isChecked()){jsonBodyObj.put("class", "First");}
+                    else if (busiclass.isChecked()){jsonBodyObj.put("class", "Business");}
+                    else if (ecoclass.isChecked()){jsonBodyObj.put("class", "Economy");}
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -352,6 +382,9 @@ public class ProfileActivity extends AppCompatActivity {
         submit.setVisibility(View.GONE);
         check.setVisibility(View.GONE);
         cancel.setVisibility(View.GONE);
+        busiclass.setVisibility(View.GONE);
+        firstclass.setVisibility(View.GONE);
+        ecoclass.setVisibility(View.GONE);
     }
 
     void displayeverything(){
@@ -367,6 +400,9 @@ public class ProfileActivity extends AppCompatActivity {
         //submit.setVisibility(View.VISIBLE);
         txtspy.setVisibility(View.VISIBLE);
         check.setVisibility(View.VISIBLE);
+        busiclass.setVisibility(View.VISIBLE);
+        firstclass.setVisibility(View.VISIBLE);
+        ecoclass.setVisibility(View.VISIBLE);
     }
 
 }

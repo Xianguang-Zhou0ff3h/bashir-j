@@ -3,6 +3,7 @@ package com.example.bashir.flightapp;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -52,6 +53,9 @@ public class BrowseActivity extends AppCompatActivity {
     GridView gv;
     ArrayList<HashMap<String, String>> allGenres;
     ArrayList<HashMap<String, String>> allCategories;
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+    String UID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +67,10 @@ public class BrowseActivity extends AppCompatActivity {
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_browse);
         getSupportActionBar().hide();
+        prefs = getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        editor = prefs.edit();
 
+        UID = prefs.getString("UID" , "null");
 
         allGenres = new ArrayList<HashMap<String, String>>();
         allCategories = new ArrayList<HashMap<String, String>>();
@@ -84,8 +91,10 @@ public class BrowseActivity extends AppCompatActivity {
         }
         //getActionBar()
 
-
-
+        boolean track = true;
+        if (track) {
+            getRecommendations(R.id.containerRecommend);
+        }
         getAllGenresPOST();
         getAllCategoriesPOST();
 
@@ -174,6 +183,67 @@ public class BrowseActivity extends AppCompatActivity {
 
     }
 
+    public void getRecommendations(final int containerID) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = getString(R.string.ip) + "/getRecommendations";
+        //String url = "https://httpbin.org/post";
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            displayTitles(response, containerID);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+
+                        Log.d("Error.Response", "error");
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+
+                //String genreArray =  gA.toArray().toString();
+                try {
+                    //jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("uid", UID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                //params.put("param1","param2");
+                return params;
+            }
+        };
+        queue.add(postRequest);
+
+    }
 
     public void getAllGenresPOST() {
         RequestQueue queue = Volley.newRequestQueue(this);

@@ -170,12 +170,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
                     <EditText
                         android:id="@+id/editText_RePassword"
                         android:layout_width="match_parent"
@@ -198,6 +192,79 @@
                         android:textColor="@android:color/darker_gray"
                         android:textColorHint="@android:color/darker_gray"
                         android:textSize="18sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
+
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation='horizontal'>
+
+                        <RadioButton
+                            android:id="@+id/rdb_firstclass2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="First Class"
+                            android:textColor="@android:color/background_light"
+                            app:buttonTint="@android:color/background_light" />
+
+                        <RadioButton
+                            android:id="@+id/rdb_Businessclass2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Business Class"
+                            android:textColor="@android:color/background_light"
+                            app:buttonTint="@android:color/background_light" />
+
+                        <RadioButton
+                            android:id="@+id/rdb_economyclass2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Economy Class"
+                            android:textColor="@android:color/background_light"
+                            app:buttonTint="@android:color/background_light" />
+
+
+                    </RadioGroup>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:weightSum="1">
+
+
+                    <TextView
+                        android:id="@+id/txt_spy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:singleLine="false"
+                        android:text="Do you want your activity to be logged in order to provide recommendations?"
+                        android:textColor="@android:color/background_light" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:buttonTint="@android:color/background_light" />
+
+
                 </TableRow>
 
                 <TableRow

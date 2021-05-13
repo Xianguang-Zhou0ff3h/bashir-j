@@ -11,7 +11,9 @@
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+
+        android:textColor="@android:color/background_light" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -290,9 +292,51 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:buttonTint="@android:color/background_light" />
+                        app:buttonTint="@android:color/background_light" />
 
 
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation='horizontal'
+                        >
+
+                        <RadioButton
+                            android:id="@+id/rdb_firstclass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="First Class"
+                            android:textColor="@android:color/background_light"
+                            app:buttonTint="@android:color/background_light"
+                            />
+
+                        <RadioButton
+                            android:id="@+id/rdb_Businessclass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Business Class"
+                            android:textColor="@android:color/background_light"
+                            app:buttonTint="@android:color/background_light"
+                            />
+
+                        <RadioButton
+                            android:id="@+id/rdb_economyclass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Economy Class"
+                            android:textColor="@android:color/background_light"
+                            app:buttonTint="@android:color/background_light"
+                            />
+                    </RadioGroup>
                 </TableRow>
 
                 <Button
