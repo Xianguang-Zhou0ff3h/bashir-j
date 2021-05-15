@@ -2,5 +2,6 @@
     <string name="app_name">AUS AIR</string>
     <string name="ids">IDS</string>
     <string name="selected">Selected</string>
-    <string name="ip">http://192.168.1.115:3000</string>
+    <string name="ip">http://9dff1d7d.ngrok.io</string>
+    <string name="oldip">http://192.168.1.115:3000</string>
 </resources>

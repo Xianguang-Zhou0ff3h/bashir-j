@@ -239,25 +239,12 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try{
-                            JSONObject jsonBodyObj = new JSONObject(response);
-                            firstname.setText(jsonBodyObj.getString("firstname"));
-                            lastname.setText(jsonBodyObj.getString("lastname"));
-                            String birth = jsonBodyObj.getString("birthdate");
-                            age.setText(birth.substring(birth.length() - 4));
-                            String track = jsonBodyObj.getString("track");
-                            if (track.equals("true")){check.setChecked(true);}
-                            else check.setChecked(false);
-                            String seat_class = jsonBodyObj.getString("class");
-                            if (seat_class.equals("First")){firstclass.setChecked(true);busiclass.setChecked(false);ecoclass.setChecked(false);}
-                            else if (seat_class.equals("Economy")){firstclass.setChecked(false);busiclass.setChecked(false);ecoclass.setChecked(true);}
-                            else if (seat_class.equals("Business")){firstclass.setChecked(false);busiclass.setChecked(true);ecoclass.setChecked(false);}
+                            parseFirstResponse(response);
 
                         }
                         catch (JSONException e){
-
+                            e.printStackTrace();
                         }
-                        displayeverything();
-                        loading.setVisibility(View.GONE);
                         Log.d("Response", response);
                     }
                 },
@@ -267,18 +254,12 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         // error
                         Log.d("Response", "Error");
+
                         //Log.d("Error.Response", response);
                     }
                 }
         ) {
 
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String>  params = new HashMap<String, String>();
-
-                return params;
-            }
         };
         queue.add(postRequest);
 
@@ -301,8 +282,9 @@ public class ProfileActivity extends AppCompatActivity {
                             String birth = jsonBodyObj.getString("birthdate");
                             age.setText(birth.substring(birth.length() - 4));
                             String track = jsonBodyObj.getString("track");
+                            Log.d("trackval",track);
                             if (track.equals("true")){check.setChecked(true);}
-                            else check.setChecked(false);
+                            else {check.setChecked(false);}
                             String seat_class = jsonBodyObj.getString("class");
                             if (seat_class.equals("First")){firstclass.setChecked(true);busiclass.setChecked(false);ecoclass.setChecked(false);}
                             else if (seat_class.equals("Economy")){firstclass.setChecked(false);busiclass.setChecked(false);ecoclass.setChecked(true);}
@@ -342,7 +324,7 @@ public class ProfileActivity extends AppCompatActivity {
                     jsonBodyObj.put("lastname", lastname.getText().toString());
                     jsonBodyObj.put("birthdate", "January 1, " + age.getText().toString() );
                     if (check.isChecked()){jsonBodyObj.put("track", "true" );}
-                    else jsonBodyObj.put("track", "false" );
+                    else {jsonBodyObj.put("track", "false" );}
                     if (!passisempty) jsonBodyObj.put("password", password.getText().toString() );
                     if (firstclass.isChecked()){jsonBodyObj.put("class", "First");}
                     else if (busiclass.isChecked()){jsonBodyObj.put("class", "Business");}
@@ -364,6 +346,44 @@ public class ProfileActivity extends AppCompatActivity {
         };
         queue.add(postRequest);
 
+    }
+
+    public void parseFirstResponse(String response) throws JSONException {
+        JSONObject jsonBodyObj = new JSONObject(response);
+        firstname.setText(jsonBodyObj.getString("firstname"));
+        lastname.setText(jsonBodyObj.getString("lastname"));
+        String birth = jsonBodyObj.getString("birthdate");
+        String seat_class = jsonBodyObj.getString("class");
+        age.setText(birth.substring(birth.length() - 4));
+        String track = jsonBodyObj.getString("track");
+
+        Log.d("trackval",track);
+        if (track.equals("true")) {
+            check.setChecked(true);
+        }
+        else {
+            check.setChecked(false);
+        }
+
+        if (seat_class.equals("First"))
+        {
+            firstclass.setChecked(true);
+            busiclass.setChecked(false);
+            ecoclass.setChecked(false);
+        }
+        else if (seat_class.equals("Economy")) {
+            firstclass.setChecked(false);
+            busiclass.setChecked(false);
+            ecoclass.setChecked(true);
+        }
+        else if (seat_class.equals("Business")){
+            firstclass.setChecked(false);
+            busiclass.setChecked(true);
+            ecoclass.setChecked(false);
+        }
+
+        displayeverything();
+        loading.setVisibility(View.GONE);
     }
 
     void hideeverything(){

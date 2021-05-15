@@ -36,7 +36,7 @@ import java.util.Map;
 public class SignUpActivity extends AppCompatActivity {
     String WrongInputColor = "#ffb3b3";
     Button btn_next;
-    EditText firstname,lastname,username,password,repassword;
+    EditText firstname,lastname,username,password,repassword, birthday;
     TableLayout table;
     Boolean usernameValid;
     SharedPreferences signinfo;
@@ -52,6 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         getSupportActionBar().hide();
 
+        birthday = (EditText) findViewById(R.id.editText_Birthday);
         firstname = (EditText)findViewById(R.id.editText_firstname);
         lastname = (EditText)findViewById(R.id.editText_lastname);
         username = (EditText)findViewById(R.id.editText_Username);
@@ -62,7 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
         firstclass = (RadioButton)findViewById(R.id.rdb_firstclass2);
         ecoclass = (RadioButton)findViewById(R.id.rdb_economyclass2);
         busiclass = (RadioButton)findViewById(R.id.rdb_Businessclass2);
-        ecoclass.setSelected(true);
+        ecoclass.setChecked(true);
         check = (CheckBox) findViewById(R.id.checkBox) ;
         table = (TableLayout)findViewById(R.id.table_layout);
         signinfo = PreferenceManager.getDefaultSharedPreferences(this);
@@ -83,6 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
                 Boolean Bool_firstname = firstname.getText().toString().equals("");
                 Boolean Bool_lastname = lastname.getText().toString().equals("");
                 Boolean Bool_username = username.getText().toString().equals("");
+                Boolean Bool_birthday = birthday.getText().toString().equals("");
                 Boolean Bool_PassShort = (password.getText().toString().length() < 6);
                 Boolean Bool_DifferentPass = !password.getText().toString().equals(repassword.getText().toString()) ||
                         password.getText().toString().equals("") || repassword.getText().toString().equals("");
@@ -98,6 +100,10 @@ public class SignUpActivity extends AppCompatActivity {
                     // username.setHint("This field is empty");
                     promptText.setVisibility(View.GONE);
                     username.setHintTextColor(Color.parseColor(WrongInputColor));
+                }
+                if (Bool_birthday){
+                    // firstname.setHint("This field is empty");
+                    birthday.setHintTextColor(Color.parseColor(WrongInputColor));
                 }
                 if (Bool_DifferentPass){
                     password.setText("");
@@ -214,6 +220,7 @@ public class SignUpActivity extends AppCompatActivity {
                     jsonBodyObj.put("password", password.getText().toString());
                     jsonBodyObj.put("firstname", firstname.getText().toString());
                     jsonBodyObj.put("lastname", lastname.getText().toString());
+                    jsonBodyObj.put("birthdate", birthday.getText().toString());
                     jsonBodyObj.put("track", Boolean.toString(check.isChecked()));
                     if (firstclass.isChecked()){jsonBodyObj.put("class", "First");}
                     else if (busiclass.isChecked()){jsonBodyObj.put("class", "Business");}
@@ -258,26 +265,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        SharedPreferences.Editor edit = signinfo.edit();
-        edit.putString("firstname", firstname.getText().toString());
-        edit.putString("lastname", lastname.getText().toString());
-        edit.putString("username", username.getText().toString());
-        edit.putString("password", password.getText().toString());
-        edit.putString("repassword", repassword.getText().toString());
-        edit.commit();
 
-        super.onPause();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        firstname.setText(signinfo.getString("firstname", ""));
-        lastname.setText(signinfo.getString("lastname", ""));
-        username.setText(signinfo.getString("username", ""));
-        password.setText(signinfo.getString("password", ""));
-        repassword.setText(signinfo.getString("repassword", ""));
-    }
+
 }
