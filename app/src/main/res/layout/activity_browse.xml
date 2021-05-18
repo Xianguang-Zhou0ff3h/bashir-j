@@ -136,7 +136,7 @@
             </HorizontalScrollView>
 
             <Button
-                android:id="@+id/filterButton"
+                android:id="@+id/filterCategoriesButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -144,9 +144,24 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/custombutton"
-                android:onClick="showPopup"
-                android:text="Filter"
+                android:onClick="showPopupCategories"
+                android:text="Filter: Categories"
                 android:textColor="@android:color/background_light" />
+
+            <Button
+                android:id="@+id/filterGenresButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/filterCategoriesButton"
+                android:layout_alignBottom="@+id/filterCategoriesButton"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/filterCategoriesButton"
+                android:layout_toStartOf="@+id/filterCategoriesButton"
+                android:background="@drawable/custombutton"
+                android:onClick="showPopupGenres"
+                android:text="Filter: Genres"
+                android:textColor="@android:color/background_light"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/button3"

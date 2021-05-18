@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void debug(View v) {
         //sendPost(username.getText().toString(),password.getText().toString());
-        Intent intent = new Intent(this, SignUpCategoryActivity.class);
+        Intent intent = new Intent(this, BrowseActivity.class);
         startActivity(intent);
     }
 
@@ -193,8 +193,10 @@ public class LoginActivity extends AppCompatActivity {
 
         int parsed = (int) mainObject.get("status");
         if (parsed == 1){
+            String track = (String) mainObject.get("track");
             UID = (String) mainObject.get("uid");
             editor.putString("UID", UID);
+            editor.putString("track", track);
             editor.commit();
             Intent intent = new Intent(this, BrowseActivity.class);
             startActivity(intent);

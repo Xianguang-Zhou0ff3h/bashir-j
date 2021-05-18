@@ -201,7 +201,7 @@ public class SignUpGenresActivity extends AppCompatActivity {
                 //String genreArray =  gA.toArray().toString();
                 JSONArray catsjson = new JSONArray(cats);
                 JSONArray genrejson = new JSONArray(statuses);
-
+                Log.d("categories", catsjson.toString());
                 try {
                     //jsonBodyObj.put("genre", genreArray);
                     jsonBodyObj.put("uid", UID);
@@ -245,7 +245,6 @@ public class SignUpGenresActivity extends AppCompatActivity {
     }
 
 
-
     public void displayGenres(String response) throws JSONException {
         JSONArray mainObject = new JSONArray(response);
         String _id;
@@ -277,11 +276,13 @@ public class SignUpGenresActivity extends AppCompatActivity {
                     if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                         // change color
                         if (!(Boolean)b1.getTag(SELKEY)) {
+                            b1.setText(b1.getText() + " \u2713");
                             b1.setPressed(true);
                             b1.setTag(SELKEY,true);
                             statuses.add(b1.getTag(IDKEY));
                         }
                         else {
+                            b1.setText(b1.getText().toString().replace(" \u2713", ""));
                             b1.setPressed(false);
                             b1.setTag(SELKEY,false);
                             statuses.remove(b1.getTag(IDKEY));
@@ -305,11 +306,13 @@ public class SignUpGenresActivity extends AppCompatActivity {
                     if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                         // change color
                         if (!(Boolean)b2.getTag(SELKEY)) {
+                            b2.setText(b2.getText() + " \u2713");
                             b2.setPressed(true);
                             b2.setTag(SELKEY,true);
                             statuses.add(b2.getTag(IDKEY));
                         }
                         else {
+                            b2.setText(b2.getText().toString().replace(" \u2713", ""));
                             b2.setPressed(false);
                             b2.setTag(SELKEY,false);
                             statuses.remove(b2.getTag(IDKEY));
@@ -345,12 +348,14 @@ public class SignUpGenresActivity extends AppCompatActivity {
                     if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                         // change color
                         if (!(Boolean)b1.getTag(SELKEY)) {
+                            b1.setText(b1.getText() + " \u2713");
                             b1.setPressed(true);
                             //b1.setSelected(true);
                             b1.setTag(SELKEY,true);
                             statuses.add(b1.getTag(IDKEY));
                         }
                         else {
+                            b1.setText(b1.getText().toString().replace(" \u2713", ""));
                             b1.setPressed(false);
                             b1.setTag(SELKEY,false);
                             statuses.remove(b1.getTag(IDKEY));

@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WatchActivity extends AppCompatActivity {
-    String UID;
+    String UID, track;
     String contentId;
     TextView remainingTV;
     SharedPreferences prefs;
@@ -60,6 +60,7 @@ public class WatchActivity extends AppCompatActivity {
         editor = prefs.edit();
 
         UID = prefs.getString("UID" , "null");
+        track = prefs.getString("track", "false");
 
         handler = new Handler();
          //milliseconds
@@ -111,7 +112,9 @@ public class WatchActivity extends AppCompatActivity {
 
     public void startContentPlayer() {
         try {
-            sendLogPOST(UID, contentId);
+            if(Boolean.parseBoolean(track)) {
+                sendLogPOST(UID, contentId);
+            }
             String link = getString(R.string.ip) + "/streamvideo/" + contentId;
             Uri vidUri = Uri.parse(link);
             videoView.setVideoURI(vidUri);

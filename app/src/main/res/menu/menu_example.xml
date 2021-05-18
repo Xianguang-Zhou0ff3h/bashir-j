@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:compat="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/mail"
-        android:title="Mail" />
-    <item android:id="@+id/upload"
-        android:title="Upload"
+    <item
+        android:id="@+id/Movie"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Movie" />
+    <item
+        android:id="@+id/TV_Series"
+        android:checkable="true"
+        android:checked="true"
+        android:title="TV Series"
         compat:showAsAction="ifRoom" />
-    <item android:id="@+id/share"
-        android:title="Share" />
+    <item
+        android:id="@+id/Music"
+        android:checkable="true"
+        android:checked="true"
+        android:title="Music" />
 </menu>

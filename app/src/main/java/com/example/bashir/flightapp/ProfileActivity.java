@@ -106,6 +106,8 @@ public class ProfileActivity extends AppCompatActivity {
                 repassword.setEnabled(true);
                 age.setEnabled(true);
                 check.setEnabled(true);
+                password.setVisibility(View.VISIBLE);
+                txtpassword.setVisibility(View.VISIBLE);
                 repassword.setVisibility(View.VISIBLE);
                 txtrepassword.setVisibility(View.VISIBLE);
                 edit.setVisibility(View.GONE);
@@ -165,6 +167,8 @@ public class ProfileActivity extends AppCompatActivity {
                     if (!Bool_firstname && !Bool_lastname && !Bool_DifferentPass && !Bool_age && !passisbetween1to6){
                         //update Server with new info, then go to browse activity
                         updateinfo();
+                        password.setVisibility(View.GONE);
+                        txtpassword.setVisibility(View.GONE);
                         edit.setVisibility(View.VISIBLE);
                         submit.setVisibility(View.GONE);
                         txtrepassword.setVisibility(View.GONE);
@@ -189,6 +193,8 @@ public class ProfileActivity extends AppCompatActivity {
                     // startActivity(intent);
                     edit.setVisibility(View.VISIBLE);
                     submit.setVisibility(View.GONE);
+                    password.setVisibility(View.GONE);
+                    txtpassword.setVisibility(View.GONE);
                     txtrepassword.setVisibility(View.GONE);
                     repassword.setVisibility(View.GONE);
                     cancel.setVisibility(View.GONE);
@@ -210,6 +216,8 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 edit.setVisibility(View.VISIBLE);
                 submit.setVisibility(View.GONE);
+                password.setVisibility(View.GONE);
+                txtpassword.setVisibility(View.GONE);
                 txtrepassword.setVisibility(View.GONE);
                 repassword.setVisibility(View.GONE);
                 cancel.setVisibility(View.GONE);
@@ -282,6 +290,8 @@ public class ProfileActivity extends AppCompatActivity {
                             String birth = jsonBodyObj.getString("birthdate");
                             age.setText(birth.substring(birth.length() - 4));
                             String track = jsonBodyObj.getString("track");
+                            editor.putString("track",track);
+                            editor.commit();
                             Log.d("trackval",track);
                             if (track.equals("true")){check.setChecked(true);}
                             else {check.setChecked(false);}
@@ -405,16 +415,17 @@ public class ProfileActivity extends AppCompatActivity {
         busiclass.setVisibility(View.GONE);
         firstclass.setVisibility(View.GONE);
         ecoclass.setVisibility(View.GONE);
+
     }
 
     void displayeverything(){
         txtfirstname.setVisibility(View.VISIBLE);
         txtlastname.setVisibility(View.VISIBLE);
-        txtpassword .setVisibility(View.VISIBLE);
+        //txtpassword .setVisibility(View.VISIBLE);
         yeartxt.setVisibility(View.VISIBLE);
         firstname.setVisibility(View.VISIBLE);
         lastname.setVisibility(View.VISIBLE);
-        password.setVisibility(View.VISIBLE);
+        //password.setVisibility(View.VISIBLE);
         age.setVisibility(View.VISIBLE);
         edit.setVisibility(View.VISIBLE);
         //submit.setVisibility(View.VISIBLE);

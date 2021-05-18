@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -16,6 +17,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -55,7 +57,11 @@ public class BrowseActivity extends AppCompatActivity {
     ArrayList<HashMap<String, String>> allCategories;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
+    Button filterGenresButton;
+    HashMap catsHashMap;
     String UID;
+    Boolean track;
+    PopupMenu popup, popupGenres;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +77,17 @@ public class BrowseActivity extends AppCompatActivity {
         editor = prefs.edit();
 
         UID = prefs.getString("UID" , "null");
+
+        catsHashMap = new HashMap();
+        filterGenresButton = (Button) findViewById(R.id.filterGenresButton);
+
+        popup = new PopupMenu(this,findViewById(R.id.filterCategoriesButton));
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_example, popup.getMenu());
+
+        popupGenres = new PopupMenu(this,findViewById(R.id.filterGenresButton));
+        MenuInflater inflater2 = popupGenres.getMenuInflater();
+        inflater2.inflate(R.menu.menu_example, popupGenres.getMenu());
 
         allGenres = new ArrayList<HashMap<String, String>>();
         allCategories = new ArrayList<HashMap<String, String>>();
@@ -91,10 +108,8 @@ public class BrowseActivity extends AppCompatActivity {
         }
         //getActionBar()
 
-        boolean track = true;
-        if (track) {
-            getRecommendations(R.id.containerRecommend);
-        }
+
+
         getAllGenresPOST();
         getAllCategoriesPOST();
 
@@ -107,6 +122,16 @@ public class BrowseActivity extends AppCompatActivity {
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+        track = Boolean.parseBoolean(prefs.getString("track","false"));
+        if (track) {
+            HorizontalScrollView sv = (HorizontalScrollView) findViewById(R.id.containerRecommend);
+            ((LinearLayout)sv.getChildAt(0)).removeAllViews();
+            getRecommendations(R.id.containerRecommend);
+        }else{
+            HorizontalScrollView sv = (HorizontalScrollView) findViewById(R.id.containerRecommend);
+            TextView upperText = (TextView) sv.getTag();
+            upperText.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -336,6 +361,59 @@ public class BrowseActivity extends AppCompatActivity {
 
     }
 
+    public void getApplicableGenresPOST(final ArrayList cats , final String categoryLabel) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = getString(R.string.ip) + "/applicableGenres";
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            populateGenresPopup(response, categoryLabel);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        //Log.d("Error.Response", response);
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+                //String genreArray =  gA.toArray().toString();
+                JSONArray jsonCats = new JSONArray(cats);
+                try {
+                    //jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("categories", jsonCats);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+        };
+        queue.add(postRequest);
+
+    }
+
+
 
     void displayTitles(String response, int containerID) throws JSONException {
         final Context context = this;
@@ -442,7 +520,7 @@ public class BrowseActivity extends AppCompatActivity {
             _id = (((JSONObject)mainObject.get(i)).getString("_id"));
             category = (((JSONObject)mainObject.get(i)).getString("category"));
             hashMap.put(_id,category);
-
+            catsHashMap.put(category,_id);
             allCategories.add(hashMap);
         }
         ArrayList cA1 = new ArrayList();
@@ -467,17 +545,147 @@ public class BrowseActivity extends AppCompatActivity {
     }
 
 
-    public void showPopup(View v) {
+    public void showPopupCategories(View v) {
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_example, popup.getMenu());
-        popup.show();
+
+
+
+
+        popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            }
+        });
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                item.setChecked(!item.isChecked());
+
+                switch (item.toString()){
+
+                    case "Movies" :
+                                    break;
+                    case "TV Series" :
+                                        break;
+                    case "Music" :
+                        break;
+                    default :
+                        break;
+                }
+                int counter = 0;
+                popupGenres.getMenu().clear();
+                for(int i= 0; i< popup.getMenu().size(); i++){
+
+                    MenuItem MenItem = popup.getMenu().getItem(i);
+
+                    if(MenItem.isChecked()){
+
+                        String filterCatID = (String) catsHashMap.get(MenItem.toString());
+                        ArrayList catID1 = new ArrayList();
+                        catID1.add(filterCatID);
+                        getApplicableGenresPOST(catID1, MenItem.toString());
+                        counter++;
+                    }
+                }
+                if (counter == 0){
+                    filterGenresButton.setVisibility(View.GONE);
+                }else{
+                    filterGenresButton.setVisibility(View.VISIBLE);
+                }
+
+
+                item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+                item.setActionView(new View(getApplicationContext()));
+                MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        return false;
+                    }
+                });
+                return false;
+            }
+        });
         decorView.setSystemUiVisibility(uiOptions);
+        popup.show();
     }
+
+    public void showPopupGenres(View v) {
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+
+
+
+        popupGenres.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            }
+        });
+
+        popupGenres.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                item.setChecked(!item.isChecked());
+
+
+//                for(int i= 0; i< popupGenres.getMenu().size(); i++){
+//                    MenuItem MenItem = popupGenres.getMenu().getItem(i);
+//                    if(MenItem.isChecked()){
+//                        String filterCatID = catsHashMap.get(MenItem.toString()).toString();
+//                        ArrayList catID1 = new ArrayList();
+//                        catID1.add(filterCatID);
+//                        getApplicableGenresPOST(catID1);
+//                    }
+//                }
+
+
+                item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+                item.setActionView(new View(getApplicationContext()));
+                MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        return false;
+                    }
+                });
+                return false;
+            }
+        });
+        decorView.setSystemUiVisibility(uiOptions);
+        popupGenres.show();
+    }
+
+    public void populateGenresPopup(String response, String categoryLabel) throws JSONException {
+        JSONArray mainObject = new JSONArray(response);
+        String _id;
+        String genre;
+        popupGenres.getMenu().add(categoryLabel).setEnabled(false);
+        for(int i = 0; i<mainObject.length();i++) {
+            _id = (((JSONObject) mainObject.get(i)).getString("_id"));
+            genre = (((JSONObject) mainObject.get(i)).getString("genre"));
+            popupGenres.getMenu().add(genre).setCheckable(true).getActionView().setTag(genre);
+        }
+    }
+
 
     public void showMenu(View v) {
         Display display = getWindowManager().getDefaultDisplay();

@@ -86,6 +86,7 @@
                         android:padding="30dp"
                         android:text="Music Videos"
                         android:textColor="@android:color/background_light" />
+
                 </TableRow>
 
                 <TableRow
@@ -102,6 +103,25 @@
                         android:layout_weight="1"
                         android:background="@drawable/custombutton"
                         android:text="Next"
+                        android:textColor="@android:color/background_light" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/btn_skip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/custombutton"
+                        android:onClick="btnSkip"
+                        android:text="Skip"
                         android:textColor="@android:color/background_light" />
                 </TableRow>
             </TableLayout>

@@ -44,11 +44,13 @@ public class SignUpCategoryActivity extends AppCompatActivity{
                     // change color
                     if (!Moviesselected) {
                         //btn_movies.setBackgroundColor(Color.parseColor(Selected));
+                        btn_movies.setText(btn_movies.getText() + " \u2713");
                         btn_movies.setPressed(true);
                         Moviesselected = true;
                     }
                     else {
                         //btn_movies.setBackgroundColor(Color.parseColor(UnSelected));
+                        btn_movies.setText(btn_movies.getText().toString().replace(" \u2713", ""));
                         btn_movies.setPressed(false);
                         Moviesselected = false;
                     }
@@ -62,10 +64,12 @@ public class SignUpCategoryActivity extends AppCompatActivity{
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     // change color
                     if (!Musicselected) {
+                        btn_music.setText(btn_music.getText() + " \u2713");
                         btn_music.setPressed(true);
                         Musicselected = true;
                     }
                     else {
+                        btn_music.setText(btn_music.getText().toString().replace(" \u2713", ""));
                         btn_music.setPressed(false);
                         Musicselected = false;
                     }
@@ -79,10 +83,12 @@ public class SignUpCategoryActivity extends AppCompatActivity{
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     // change color
                     if (!TVselected) {
+                        btn_tv.setText(btn_tv.getText() + " \u2713");
                         btn_tv.setPressed(true);
                         TVselected = true;
                     }
                     else {
+                        btn_tv.setText(btn_tv.getText().toString().replace(" \u2713", ""));
                         btn_tv.setPressed(false);
                         TVselected = false;
                     }
@@ -109,6 +115,13 @@ public class SignUpCategoryActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
+    public void btnSkip() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         //super.onBackPressed();
     }
 

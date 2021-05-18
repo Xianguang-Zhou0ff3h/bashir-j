@@ -284,7 +284,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0.5"
-                        android:text="Do you want us to spy on you to provide good recommendations?"
+                        android:text="Do you want your activity to be logged in order to provide recommendations?"
                         android:textColor="@android:color/background_light" />
 
                     <CheckBox
