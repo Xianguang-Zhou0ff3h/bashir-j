@@ -118,7 +118,7 @@ public class SignUpCategoryActivity extends AppCompatActivity{
         //super.onBackPressed();
     }
 
-    public void btnSkip() {
+    public void btnSkip(View v) {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

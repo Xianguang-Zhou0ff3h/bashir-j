@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Display;
@@ -58,10 +59,11 @@ public class BrowseActivity extends AppCompatActivity {
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     Button filterGenresButton;
-    HashMap catsHashMap;
+    HashMap catsHashMap, menuItemHashGenres, menuItemHashID;
     String UID;
     Boolean track;
     PopupMenu popup, popupGenres;
+    Boolean movieShow = true, tvShow = true, musicShow = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,9 @@ public class BrowseActivity extends AppCompatActivity {
         editor = prefs.edit();
 
         UID = prefs.getString("UID" , "null");
+
+        menuItemHashGenres = new HashMap();
+        menuItemHashID = new HashMap();
 
         catsHashMap = new HashMap();
         filterGenresButton = (Button) findViewById(R.id.filterGenresButton);
@@ -131,6 +136,7 @@ public class BrowseActivity extends AppCompatActivity {
             HorizontalScrollView sv = (HorizontalScrollView) findViewById(R.id.containerRecommend);
             TextView upperText = (TextView) sv.getTag();
             upperText.setVisibility(View.GONE);
+            sv.setVisibility(View.GONE);
         }
     }
 
@@ -189,6 +195,71 @@ public class BrowseActivity extends AppCompatActivity {
                 Log.d("array", catArray.toString());
                 try {
                     //jsonBodyObj.put("genre", genreArray);
+                    jsonBodyObj.put("category", catArray);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonBodyObj.toString().getBytes();
+            }
+
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                //params.put("param1","param2");
+                return params;
+            }
+        };
+        queue.add(postRequest);
+
+    }
+
+    public void getFilteredContentPOST(final ArrayList cA, final ArrayList gA, final int containerID) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        String url = getString(R.string.ip) + "/getContent";
+        //String url = "https://httpbin.org/post";
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            displayTitles(response, containerID);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        displayError(cA, containerID);
+                        Log.d("Error.Response", "error");
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                JSONObject jsonBodyObj = new JSONObject();
+
+                //String genreArray =  gA.toArray().toString();
+                JSONArray catArray = new JSONArray(cA);
+                JSONArray genreArray = new JSONArray(gA);
+                Log.d("array", catArray.toString());
+                try {
+                    jsonBodyObj.put("genre", genreArray);
                     jsonBodyObj.put("category", catArray);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -418,6 +489,7 @@ public class BrowseActivity extends AppCompatActivity {
     void displayTitles(String response, int containerID) throws JSONException {
         final Context context = this;
         HorizontalScrollView sv = (HorizontalScrollView) findViewById(containerID);
+        ((LinearLayout)sv.getChildAt(0)).removeAllViews();
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -457,11 +529,34 @@ public class BrowseActivity extends AppCompatActivity {
                 }
             });
             ((LinearLayout)sv.getChildAt(0)).addView(view);
-            sv.setVisibility(View.VISIBLE);
+            if(containerID == R.id.containerMovies && movieShow){
+                sv.setVisibility(View.VISIBLE);
+                TextView upperText = (TextView) sv.getTag();
+                upperText.setVisibility(View.VISIBLE);
+            }
+            if(containerID == R.id.containerTV && tvShow){
+                sv.setVisibility(View.VISIBLE);
+                TextView upperText = (TextView) sv.getTag();
+                upperText.setVisibility(View.VISIBLE);
+            }
+            if(containerID == R.id.containerMusic && musicShow){
+                sv.setVisibility(View.VISIBLE);
+                TextView upperText = (TextView) sv.getTag();
+                upperText.setVisibility(View.VISIBLE);
+            }
+            if(containerID == R.id.containerRecommend){
+                sv.setVisibility(View.VISIBLE);
+                TextView upperText = (TextView) sv.getTag();
+                upperText.setVisibility(View.VISIBLE);
+            }
+
+
+
+        }
+        if(mainObject.length() == 0){
+            sv.setVisibility(View.GONE);
             TextView upperText = (TextView) sv.getTag();
-            upperText.setVisibility(View.VISIBLE);
-
-
+            upperText.setVisibility(View.GONE);
         }
         //setContentView(R.layout.activity_browse);
 
@@ -567,17 +662,7 @@ public class BrowseActivity extends AppCompatActivity {
 
                 item.setChecked(!item.isChecked());
 
-                switch (item.toString()){
 
-                    case "Movies" :
-                                    break;
-                    case "TV Series" :
-                                        break;
-                    case "Music" :
-                        break;
-                    default :
-                        break;
-                }
                 int counter = 0;
                 popupGenres.getMenu().clear();
                 for(int i= 0; i< popup.getMenu().size(); i++){
@@ -587,10 +672,55 @@ public class BrowseActivity extends AppCompatActivity {
                     if(MenItem.isChecked()){
 
                         String filterCatID = (String) catsHashMap.get(MenItem.toString());
+
+                        HorizontalScrollView sv = new HorizontalScrollView(getApplicationContext());
+                        switch (MenItem.toString()){
+
+                            case "Movie" : sv = (HorizontalScrollView) findViewById(R.id.containerMovies);
+                                movieShow = true;
+                                break;
+                            case "TV Series" : sv = (HorizontalScrollView) findViewById(R.id.containerTV);
+                                tvShow = true;
+                                break;
+                            case "Music" : sv = (HorizontalScrollView) findViewById(R.id.containerMusic);
+                                musicShow = true;
+                                break;
+                            default :
+                                break;
+                        }
+
+                        sv.setVisibility(View.VISIBLE);
+                        TextView upperText = (TextView) sv.getTag();
+                        upperText.setVisibility(View.VISIBLE);
+
+
                         ArrayList catID1 = new ArrayList();
                         catID1.add(filterCatID);
+                        menuItemHashGenres.clear();
+                        menuItemHashID.clear();
                         getApplicableGenresPOST(catID1, MenItem.toString());
                         counter++;
+                    }else{
+                        //TODO make view invisible
+                        HorizontalScrollView sv = new HorizontalScrollView(getApplicationContext());
+                        switch (MenItem.toString()){
+
+                            case "Movie" : sv = (HorizontalScrollView) findViewById(R.id.containerMovies);
+                                movieShow = false;
+                                break;
+                            case "TV Series" : sv = (HorizontalScrollView) findViewById(R.id.containerTV);
+                                tvShow = false;
+                                break;
+                            case "Music" : sv = (HorizontalScrollView) findViewById(R.id.containerMusic);
+                                musicShow = false;
+                                break;
+                            default :
+                                break;
+                        }
+
+                        sv.setVisibility(View.GONE);
+                        TextView upperText = (TextView) sv.getTag();
+                        upperText.setVisibility(View.GONE);
                     }
                 }
                 if (counter == 0){
@@ -629,10 +759,58 @@ public class BrowseActivity extends AppCompatActivity {
 
 
 
+
         popupGenres.setOnDismissListener(new PopupMenu.OnDismissListener() {
             @Override
             public void onDismiss(PopupMenu menu) {
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+                ArrayList filterGenresMovie = new ArrayList();
+                ArrayList filterGenresTV = new ArrayList();
+                ArrayList filterGenresMusic = new ArrayList();
+
+                for(int i= 0; i< popupGenres.getMenu().size(); i++){
+
+                    MenuItem MenItem = popupGenres.getMenu().getItem(i);
+
+                    if(MenItem.isChecked()){
+
+
+                        switch ((String)menuItemHashGenres.get(MenItem)){
+
+                            case "Movie" : filterGenresMovie.add((String)menuItemHashID.get(MenItem));
+                                Log.d("IDS", "movieadded");
+                                break;
+                            case "TV Series" : filterGenresTV.add((String)menuItemHashID.get(MenItem));
+                                break;
+                            case "Music" : filterGenresMusic.add((String)menuItemHashID.get(MenItem));
+                                break;
+                            default :
+                                break;
+                        }
+
+
+                    }else{
+
+                    }
+                }
+
+                String MoviesID = (String) catsHashMap.get("Movie");
+                ArrayList catMoviesID = new ArrayList();
+                catMoviesID.add(MoviesID);
+
+                String TVseriesID = (String) catsHashMap.get("TV Series");
+                ArrayList catTVID = new ArrayList();
+                catTVID.add(TVseriesID);
+
+                String MusicID = (String) catsHashMap.get("Music");
+                ArrayList catMusicID = new ArrayList();
+                catMusicID.add(MusicID);
+
+                getFilteredContentPOST(catMoviesID,filterGenresMovie,R.id.containerMovies);
+                getFilteredContentPOST(catMusicID,filterGenresMusic,R.id.containerMusic);
+                getFilteredContentPOST(catTVID,filterGenresTV,R.id.containerTV);
+                //TODO send filter request
             }
         });
 
@@ -679,10 +857,15 @@ public class BrowseActivity extends AppCompatActivity {
         String _id;
         String genre;
         popupGenres.getMenu().add(categoryLabel).setEnabled(false);
+
         for(int i = 0; i<mainObject.length();i++) {
             _id = (((JSONObject) mainObject.get(i)).getString("_id"));
             genre = (((JSONObject) mainObject.get(i)).getString("genre"));
-            popupGenres.getMenu().add(genre).setCheckable(true).getActionView().setTag(genre);
+            MenuItem dynamicMenuItem = popupGenres.getMenu().add(genre);
+            menuItemHashGenres.put(dynamicMenuItem,categoryLabel);
+            menuItemHashID.put(dynamicMenuItem,_id);
+            dynamicMenuItem.setCheckable(true);
+
         }
     }
 
